@@ -14,9 +14,7 @@ namespace Sample.Benchy.Tests
         {
             _ds = new DataSet("My Dataset");
             _ds.Tables.Add(new DataTable("My Table"));
-            _ds.Tables.Add(new DataTable("My second table"));
             _ds.Tables[0].Columns.Add(new DataColumn("Column1"));
-            _ds.Tables[1].Columns.Add(new DataColumn("Column1"));
         }
 
         [Teardown]
@@ -28,7 +26,11 @@ namespace Sample.Benchy.Tests
         [Benchmark]
         public void Execute()
         {
-            var a = 100 - 1;
+            
+            var row = _ds.Tables[0].NewRow();
+            row["Column1"] = 43;
+            _ds.Tables[0].Rows.Add(row);
+            _ds.Tables[0].AcceptChanges();
         }
     }
 }
