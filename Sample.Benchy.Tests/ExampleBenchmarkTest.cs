@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using Benchy;
 
 namespace Sample.Benchy.Tests
@@ -7,7 +8,6 @@ namespace Sample.Benchy.Tests
     class ExampleBenchmarkTest
     {
         private DataSet _ds;
-
 
         [Setup]
         public void Setup()
@@ -23,10 +23,9 @@ namespace Sample.Benchy.Tests
             _ds = null;
         }
 
-        [Benchmark]
+        [Benchmark(ExecutionCount = 2, FailureTimeInTicks = 500)]
         public void Execute()
         {
-            
             var row = _ds.Tables[0].NewRow();
             row["Column1"] = 43;
             _ds.Tables[0].Rows.Add(row);

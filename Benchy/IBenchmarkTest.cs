@@ -2,6 +2,8 @@
 {
     public interface IBenchmarkTest
     {
+        uint ExecutionCount { get; }
+
         string Name { get; }
 
         /// <summary>

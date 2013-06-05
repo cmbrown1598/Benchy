@@ -43,16 +43,20 @@
     <Compile Include="BenchmarkFixtureAttribute.cs" />
     <Compile Include="DataBreakout.cs" />
     <Compile Include="ExecutionExceptionInformation.cs" />
+    <Compile Include="ExternalBenchmarkTest.cs" />
     <Compile Include="IBenchmarkTest.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="LoggingStrategy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Result.cs" />
+    <Compile Include="ResultStatus.cs" />
     <Compile Include="SetupAttribute.cs" />
     <Compile Include="SetupException.cs" />
     <Compile Include="TeardownAttribute.cs" />
     <Compile Include="TeardownException.cs" />
+    <Compile Include="TestBuilder.cs" />
+    <Compile Include="TestGetter.cs" />
     <Compile Include="TestRunner.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -14,10 +14,10 @@ namespace Benchy
             _logger = logger;
         }
 
-        public Result[] ExecuteTests(IEnumerable<IBenchmarkTest> tests, uint executionCount)
+        public Result[] ExecuteTests(IEnumerable<IBenchmarkTest> tests)
         {
             var returnList = new List<Result>();
-            var performanceTestPasses = PerformTests(tests, executionCount);
+            var performanceTestPasses = PerformTests(tests);
 
             foreach (var item in performanceTestPasses)
             {
@@ -27,9 +27,11 @@ namespace Benchy
 
             return returnList.ToArray();
         }
-
+        
         protected virtual void LogResult(Result item)
         {
+
+
             _logger.WriteEntry(item.Name + " Statistics",
                 LoggingStrategy.Results);
 
@@ -87,7 +89,7 @@ namespace Benchy
                                LoggingStrategy.Results | LoggingStrategy.Teardown | LoggingStrategy.Exception);
         }
 
-        private IEnumerable<Result> PerformTests(IEnumerable<IBenchmarkTest> tests, uint executionCount)
+        private IEnumerable<Result> PerformTests(IEnumerable<IBenchmarkTest> tests)
         {
             foreach (var test in tests.Select(t => new HostedBenchmarkTest(t)))
             {
@@ -99,7 +101,7 @@ namespace Benchy
                     
                     test.Setup();
 
-                    for (var i = 0; i <= executionCount; i++)
+                    for (var i = 0; i <= test.ExecutionCount; i++)
                     {
                         _logger.WriteEntry(i == 0
                             ? "Initializing"
@@ -131,6 +133,16 @@ namespace Benchy
 
                     result.TeardownException = teardownException;
                 }
+
+                // set the status
+                if (result.ThrewExceptions)
+                {
+                    result.ResultStatus = ResultStatus.Failed;
+                }
+
+                
+
+
                 yield return result;
             }
         }
@@ -157,6 +169,10 @@ namespace Benchy
             public TimeSpan ExecutionTime { get; private set; }
             public string ExceptionName { get; private set; }
             public bool ThrewException { get; private set; }
+
+            public uint ExecutionCount {
+                get { return _hostedTest.ExecutionCount; }
+            }
 
             public string Name
             {

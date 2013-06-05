@@ -9,6 +9,8 @@ namespace Benchy
         private readonly List<TimeSpan> _completionTimes = new List<TimeSpan>();
         private readonly Dictionary<string, int> _exceptionCounts = new Dictionary<string, int>();
 
+        public ResultStatus ResultStatus { get; internal set; }
+
         public bool ThrewExceptionOnSetup
         {
             get { return SetupException != null; }

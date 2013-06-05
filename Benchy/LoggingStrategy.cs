@@ -10,6 +10,7 @@ namespace Benchy
         Setup = 2,
         Teardown = 4,
         Execution = 8,
-        Exception = 16
+        Exception = 16,
+        Full = Results | Setup | Teardown | Execution | Exception
     }
 }
