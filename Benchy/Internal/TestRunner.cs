@@ -19,9 +19,9 @@ namespace Benchy.Internal
         /// </summary>
         /// <param name="tests"></param>
         /// <returns></returns>
-        public ITestResults[] ExecuteTests(IEnumerable<IBenchmarkTest> tests)
+        public IExecutionResults[] ExecuteTests(IEnumerable<IBenchmarkTest> tests)
         {
-            var returnList = new List<ITestResults>();
+            var returnList = new List<IExecutionResults>();
             var performanceTestPasses = PerformTests(tests);
 
             foreach (var item in performanceTestPasses)
@@ -33,7 +33,7 @@ namespace Benchy.Internal
             return returnList.ToArray();
         }
         
-        void LogResult(TestResults item)
+        void LogResult(ExecutionResults item)
         {
             _logger.WriteEntry(item.Name + " Statistics",
                 LogLevel.Results);
@@ -92,11 +92,11 @@ namespace Benchy.Internal
                                LogLevel.Results | LogLevel.Teardown | LogLevel.Exception);
         }
 
-        private IEnumerable<TestResults> PerformTests(IEnumerable<IBenchmarkTest> tests)
+        private IEnumerable<ExecutionResults> PerformTests(IEnumerable<IBenchmarkTest> tests)
         {
             foreach (var test in tests.Select(t => new HostedBenchmarkTest(t)))
             {
-                var result = new TestResults { Name = test.Name };
+                var result = new ExecutionResults { Name = test.Name };
 
                 try
                 {

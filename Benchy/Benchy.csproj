@@ -54,7 +54,7 @@
     <Compile Include="Internal\ITestRunner.cs" />
     <Compile Include="Internal\TestBuilder.cs" />
     <Compile Include="Internal\TestPass.cs" />
-    <Compile Include="Internal\TestResults.cs" />
+    <Compile Include="Internal\ExecutionResults.cs" />
     <Compile Include="Internal\TestRunner.cs" />
     <Compile Include="ITestPass.cs" />
     <Compile Include="ITestResults.cs" />

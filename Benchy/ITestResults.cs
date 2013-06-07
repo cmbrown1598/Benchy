@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Benchy.Internal;
 
 namespace Benchy
 {
-    public interface ITestResults
+    public interface IExecutionResults
     {
         ResultStatus ResultStatus { get; }
         bool ThrewExceptionOnSetup { get; }
