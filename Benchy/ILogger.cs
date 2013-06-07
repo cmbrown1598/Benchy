@@ -2,6 +2,6 @@
 {
     public interface ILogger
     {
-        void WriteEntry(string text, LoggingStrategy level);
+        void WriteEntry(string text, LogLevel level);
     }
 }

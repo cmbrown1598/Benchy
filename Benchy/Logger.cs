@@ -1,23 +1,22 @@
-﻿using System;
-
-namespace Benchy
+﻿namespace Benchy
 {
-    // Why NOT use log4net?
-    public class Logger : ILogger
+    public abstract class Logger : ILogger
     {
-        private readonly LoggingStrategy _loggingStrategy;
+        private readonly LogLevel _loggingStrategy;
 
-        public Logger(LoggingStrategy loggingStrategy)
+        protected Logger(LogLevel loggingStrategy)
         {
             _loggingStrategy = loggingStrategy;
         }
 
-        public void WriteEntry(string text, LoggingStrategy level)
+        public void WriteEntry(string text, LogLevel level)
         {
             if (_loggingStrategy.HasFlag(level))
             {
-                Console.WriteLine(text);
+                Write(text);
             }
         }
+
+        protected abstract void Write(string text);
     }
 }

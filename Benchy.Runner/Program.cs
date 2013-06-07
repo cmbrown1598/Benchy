@@ -6,11 +6,17 @@ namespace Benchy.Runner
     {
         static void Main(string[] args)
         {
-            var tg = new TestGetter();
-            var  tests =  tg.GetTests(args);
-            var runner = new TestRunner(new Logger(LoggingStrategy.Full));
-            runner.ExecuteTests(tests);
-        
+            // Options and filepaths of assemblies to load.
+
+            var parser = new CommandArgumentParser();
+            var options = parser.Parse(args);
+
+            using (var engine = new Engine(options))
+            {
+                engine.Execute();
+            }
+            Console.WriteLine("Press any key to continue.");
+            Console.ReadLine();
         }
     }
 }

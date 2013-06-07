@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace Benchy
+namespace Benchy.Internal
 {
-    public class TestRunner : IDisposable
+    sealed class TestRunner : ITestRunner
     {
         private ILogger _logger;
 
@@ -14,131 +14,142 @@ namespace Benchy
             _logger = logger;
         }
 
-        public Result[] ExecuteTests(IEnumerable<IBenchmarkTest> tests)
+        /// <summary>
+        /// Main method that executes the tests.
+        /// </summary>
+        /// <param name="tests"></param>
+        /// <returns></returns>
+        public ITestResults[] ExecuteTests(IEnumerable<IBenchmarkTest> tests)
         {
-            var returnList = new List<Result>();
+            var returnList = new List<ITestResults>();
             var performanceTestPasses = PerformTests(tests);
 
             foreach (var item in performanceTestPasses)
             {
-                LogResult(item);
                 returnList.Add(item);
+                LogResult(item);
             }
 
             return returnList.ToArray();
         }
         
-        protected virtual void LogResult(Result item)
+        void LogResult(TestResults item)
         {
-
-
             _logger.WriteEntry(item.Name + " Statistics",
-                LoggingStrategy.Results);
+                LogLevel.Results);
 
-            _logger.WriteEntry(string.Format("Longest time (in ticks): {0}", item.LongestTime),
-                LoggingStrategy.Results);
+            _logger.WriteEntry(string.Format("Longest time: {0}", item.LongestTime),
+                LogLevel.Results);
 
-            _logger.WriteEntry(string.Format("Shortest time (in ticks): {0}", item.ShortestTime),
-                LoggingStrategy.Results);
+            _logger.WriteEntry(string.Format("Shortest time: {0}", item.ShortestTime),
+                LogLevel.Results);
 
-            _logger.WriteEntry(string.Format("Mean time (in ticks): {0}", item.MeanTime),
-                LoggingStrategy.Results);
+            _logger.WriteEntry(string.Format("Average time: {0}", item.MeanTime),
+                LogLevel.Results);
 
-            _logger.WriteEntry(string.Format("Std Dev (in ticks): {0}", item.StdDev),
-                LoggingStrategy.Results);
+            _logger.WriteEntry(string.Format("Standard Deviation: {0}", item.StdDev),
+                LogLevel.Results);
 
             _logger.WriteEntry(item.Name + " Time Breakout",
-                LoggingStrategy.Results);
+                LogLevel.Results);
 
             foreach (var brek in item.GetBreakout())
             {
                 _logger.WriteEntry(brek.GetText(),
-                    LoggingStrategy.Results);
+                    LogLevel.Results);
             }
 
             if (item.ThrewExceptionOnSetup)
             {
                 _logger.WriteEntry(item.Name + " Threw Exceptions on Setup.",
-                    LoggingStrategy.Results | LoggingStrategy.Setup | LoggingStrategy.Exception);
+                    LogLevel.Results | LogLevel.Setup | LogLevel.Exception);
 
                 _logger.WriteEntry(item.SetupException.ToString(),
-                    LoggingStrategy.Results | LoggingStrategy.Setup | LoggingStrategy.Exception);
+                    LogLevel.Results | LogLevel.Setup | LogLevel.Exception);
             }
 
             if (item.ThrewExecutionExceptions)
             {
                 _logger.WriteEntry(item.Name + " Threw Exceptions during testing.",
-                                   LoggingStrategy.Results | LoggingStrategy.Execution | LoggingStrategy.Exception);
+                                   LogLevel.Results | LogLevel.Execution | LogLevel.Exception);
 
                 foreach (var exceptionRecord in item.GetExecutionExceptions())
                 {
                     _logger.WriteEntry(string.Format("{0} thrown", exceptionRecord.ExceptionTypeName),
-                                       LoggingStrategy.Results | LoggingStrategy.Execution | LoggingStrategy.Exception);
+                                       LogLevel.Results | LogLevel.Execution | LogLevel.Exception);
 
                     _logger.WriteEntry(string.Format("\t{0} occurrence(s).", exceptionRecord.Occurances),
-                                       LoggingStrategy.Results | LoggingStrategy.Execution | LoggingStrategy.Exception);
+                                       LogLevel.Results | LogLevel.Execution | LogLevel.Exception);
                 }
             }
             
             if (!item.ThrewExceptionOnTeardown) return;
             
             _logger.WriteEntry(item.Name + " Threw Exceptions on Teardown.",
-                               LoggingStrategy.Results | LoggingStrategy.Teardown | LoggingStrategy.Exception);
+                               LogLevel.Results | LogLevel.Teardown | LogLevel.Exception);
 
             _logger.WriteEntry(item.TeardownException.ToString(),
-                               LoggingStrategy.Results | LoggingStrategy.Teardown | LoggingStrategy.Exception);
+                               LogLevel.Results | LogLevel.Teardown | LogLevel.Exception);
         }
 
-        private IEnumerable<Result> PerformTests(IEnumerable<IBenchmarkTest> tests)
+        private IEnumerable<TestResults> PerformTests(IEnumerable<IBenchmarkTest> tests)
         {
             foreach (var test in tests.Select(t => new HostedBenchmarkTest(t)))
             {
-                var result = new Result { Name = test.Name };
+                var result = new TestResults { Name = test.Name };
 
                 try
                 {
-                    _logger.WriteEntry(string.Format("{0}: Setup", test.Name), LoggingStrategy.Setup);
+                    _logger.WriteEntry(string.Format("{0}: Setup", test.Name),
+                        LogLevel.Setup);
                     
                     test.Setup();
 
                     for (var i = 0; i <= test.ExecutionCount; i++)
                     {
-                        _logger.WriteEntry(i == 0
-                            ? "Initializing"
-                            : string.Format("{1} Executing, Pass #{0}", i, test.Name), LoggingStrategy.Execution);
+                        var testPassName = i == 0
+                                               ? string.Format("{0} Initialization", test.Name)
+                                               : string.Format("{1} Execution, Pass #{0}", i, test.Name);
+
+                        _logger.WriteEntry(testPassName,
+                            LogLevel.Execution);
 
                         test.Execute();
-                    
-                        if (test.ThrewException)
-                        {
-                            result.AddExecutionException(test.ExceptionName);
-                        }
 
-                        result.AddExecutionTime(test.ExecutionTime);
+                        var testPass = new TestPass { TestName = testPassName, ExceptionOccurred = test.ThrewException, ExceptionTypeName = test.ExceptionName, ExecutionTime = test.ExecutionTime };
+                        
+                        if (test.ThrewException || i > 0)
+                        {
+                            result.AddTestPass(testPass);
+                        }
                     }
                     
-                    _logger.WriteEntry(string.Format("{0}: Teardown", test.Name), LoggingStrategy.Teardown);
+                    _logger.WriteEntry(string.Format("{0}: Teardown", test.Name),
+                        LogLevel.Teardown);
 
                     test.Teardown();
                 }
                 catch (SetupException setup)
                 {
-                    _logger.WriteEntry(string.Format("{0}: Setup Exception\r\n{1}", test.Name, setup), LoggingStrategy.Exception | LoggingStrategy.Setup);
+                    _logger.WriteEntry(string.Format("{0}: Setup Exception\r\n{1}", test.Name, setup),
+                        LogLevel.Exception | LogLevel.Setup);
 
                     result.SetupException = setup;
                 }
                 catch (TeardownException teardownException)
                 {
-                    _logger.WriteEntry(string.Format("{0}: Teardown Exception\r\n{1}", test.Name, teardownException), LoggingStrategy.Exception | LoggingStrategy.Teardown);
+                    _logger.WriteEntry(string.Format("{0}: Teardown Exception\r\n{1}", test.Name, teardownException),
+                        LogLevel.Exception | LogLevel.Teardown);
 
                     result.TeardownException = teardownException;
                 }
 
                 // set the status
-                if (result.ThrewExceptions)
+                if (result.HasExceptions)
                 {
                     result.ResultStatus = ResultStatus.Failed;
                 }
+
 
                 
 
@@ -149,15 +160,10 @@ namespace Benchy
 
         public void Dispose()
         {
-            Dispose(true);
-        }
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposing) return;
             _logger = null;
         }
 
-        private class HostedBenchmarkTest : IBenchmarkTest
+        private class HostedBenchmarkTest
         {
             private readonly IBenchmarkTest _hostedTest;
 

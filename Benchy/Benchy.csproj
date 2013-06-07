@@ -39,26 +39,35 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BenchmarkAttribute.cs" />
-    <Compile Include="BenchmarkFixtureAttribute.cs" />
-    <Compile Include="DataBreakout.cs" />
-    <Compile Include="ExecutionExceptionInformation.cs" />
-    <Compile Include="ExternalBenchmarkTest.cs" />
-    <Compile Include="IBenchmarkTest.cs" />
+    <Compile Include="Attributes\BenchmarkAttribute.cs" />
+    <Compile Include="Attributes\BenchmarkFixtureAttribute.cs" />
+    <Compile Include="Engine.cs" />
+    <Compile Include="IDataBreakout.cs" />
+    <Compile Include="IExecutionExceptionInformation.cs" />
+    <Compile Include="IExecutionOptions.cs" />
     <Compile Include="ILogger.cs" />
+    <Compile Include="Internal\AssemblyLoader.cs" />
+    <Compile Include="Internal\DataBreakout.cs" />
+    <Compile Include="Internal\ExecutionExceptionInformation.cs" />
+    <Compile Include="Internal\ExternalBenchmarkTest.cs" />
+    <Compile Include="Internal\IBenchmarkTest.cs" />
+    <Compile Include="Internal\ITestRunner.cs" />
+    <Compile Include="Internal\TestBuilder.cs" />
+    <Compile Include="Internal\TestPass.cs" />
+    <Compile Include="Internal\TestResults.cs" />
+    <Compile Include="Internal\TestRunner.cs" />
+    <Compile Include="ITestPass.cs" />
+    <Compile Include="ITestResults.cs" />
     <Compile Include="Logger.cs" />
-    <Compile Include="LoggingStrategy.cs" />
+    <Compile Include="Enums\LoggingStrategy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Result.cs" />
-    <Compile Include="ResultStatus.cs" />
-    <Compile Include="SetupAttribute.cs" />
-    <Compile Include="SetupException.cs" />
-    <Compile Include="TeardownAttribute.cs" />
-    <Compile Include="TeardownException.cs" />
-    <Compile Include="TestBuilder.cs" />
-    <Compile Include="TestGetter.cs" />
-    <Compile Include="TestRunner.cs" />
+    <Compile Include="Enums\ResultStatus.cs" />
+    <Compile Include="Attributes\SetupAttribute.cs" />
+    <Compile Include="Exceptions\SetupException.cs" />
+    <Compile Include="Attributes\TeardownAttribute.cs" />
+    <Compile Include="Exceptions\TeardownException.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -3,20 +3,16 @@ using Benchy;
 
 namespace Sample.Benchy.Tests
 {
-    public class CaptainPlanetBenchmarkTest : IBenchmarkTest
+    [BenchmarkFixture(Category = "Superheros")]
+    public class CaptainPlanetBenchmarkTest
     {
-        public uint ExecutionCount {
-            get { return 5; }
-        }
-
-        public string Name {
-            get { return "Captain Planet"; }
-        }
+        [Setup]
         public void Setup()
         {
             Console.WriteLine("This sets up nothing.");
         }
 
+        [Benchmark(ExecutionCount = 10)]
         public void Execute()
         {
             var j = 0;
@@ -25,7 +21,7 @@ namespace Sample.Benchy.Tests
                 j = j * i;
             }
         }
-
+        [Teardown]
         public void Teardown()
         {
             Console.WriteLine("This tears down nothing.");

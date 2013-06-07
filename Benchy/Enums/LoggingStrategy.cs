@@ -3,7 +3,7 @@
 namespace Benchy
 {
     [Flags]
-    public enum LoggingStrategy
+    public enum LogLevel
     {
         None = 0,
         Results = 1,
@@ -11,6 +11,7 @@ namespace Benchy
         Teardown = 4,
         Execution = 8,
         Exception = 16,
-        Full = Results | Setup | Teardown | Execution | Exception
+        FixtureSetup = 32,
+        Full = Results | Setup | Teardown | Execution | Exception | FixtureSetup
     }
 }
