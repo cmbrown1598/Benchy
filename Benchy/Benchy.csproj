@@ -11,6 +11,7 @@
     <AssemblyName>Benchy</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,14 +21,27 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Mojoshouse.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -42,14 +56,17 @@
     <Compile Include="Attributes\BenchmarkAttribute.cs" />
     <Compile Include="Attributes\BenchmarkFixtureAttribute.cs" />
     <Compile Include="Engine.cs" />
+    <Compile Include="ExecutionResultsWriter.cs" />
     <Compile Include="IDataBreakout.cs" />
     <Compile Include="IExecutionExceptionInformation.cs" />
     <Compile Include="IExecutionOptions.cs" />
+    <Compile Include="IExecutionResultsWriter.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="Internal\AssemblyLoader.cs" />
     <Compile Include="Internal\DataBreakout.cs" />
     <Compile Include="Internal\ExecutionExceptionInformation.cs" />
     <Compile Include="Internal\ExternalBenchmarkTest.cs" />
+    <Compile Include="Internal\HostedBenchmarkTest.cs" />
     <Compile Include="Internal\IBenchmarkTest.cs" />
     <Compile Include="Internal\ITestRunner.cs" />
     <Compile Include="Internal\TestBuilder.cs" />
@@ -67,7 +84,9 @@
     <Compile Include="Attributes\TeardownAttribute.cs" />
     <Compile Include="Exceptions\TeardownException.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Mojoshouse.pfx" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

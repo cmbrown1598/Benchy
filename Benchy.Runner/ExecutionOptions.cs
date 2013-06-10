@@ -12,14 +12,22 @@ namespace Benchy.Runner
         public ILogger Logger { get; set; }
 
         /// <summary>
+        /// The results writer to use.
+        /// </summary>
+        public IExecutionResultsWriter ResultsWriter { get; set; }
+
+
+        /// <summary>
         /// Standard constructor.
         /// </summary>
         /// <param name="files"></param>
         /// <param name="logger"></param>
-        public ExecutionOptions(string[] files, ILogger logger)
+        /// <param name="writer"></param>
+        public ExecutionOptions(string[] files, ILogger logger, IExecutionResultsWriter writer = null)
         {
             Files = files;
             Logger = logger;
+            ResultsWriter = writer ?? new ExecutionResultsWriter(logger);
         }
     }
 }

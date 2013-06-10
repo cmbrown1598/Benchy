@@ -30,6 +30,8 @@ namespace Sample.Benchy.Tests
             row["Column1"] = 43;
             _ds.Tables[0].Rows.Add(row);
             _ds.Tables[0].AcceptChanges();
+            _ds.Tables[0].Rows.Clear();
+            _ds.Tables[0].AcceptChanges();
         }
     }
 }

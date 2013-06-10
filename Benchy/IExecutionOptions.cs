@@ -11,5 +11,10 @@
         /// The logger to use.
         /// </summary>
         ILogger Logger { get; set; }
+
+        /// <summary>
+        /// The logger to use.
+        /// </summary>
+        IExecutionResultsWriter ResultsWriter { get; set; }
     }
 }

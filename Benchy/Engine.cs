@@ -17,7 +17,7 @@ namespace Benchy
         {
             var tests = AssemblyLoader.LoadTests(_options.Logger, _options.Files);
             
-            var runner = new TestRunner(_options.Logger);
+            var runner = new TestRunner(_options.Logger, _options.ResultsWriter);
             return runner.ExecuteTests(tests);
         }
 
