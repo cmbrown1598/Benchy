@@ -10,6 +10,8 @@ namespace Benchy.Internal
         TimeSpan? FailTime { get; }
 
         string Name { get; }
+        string TypeName { get; }
+        string Category { get; }
 
         void Setup();
         void Execute();

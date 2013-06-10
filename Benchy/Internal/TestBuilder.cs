@@ -29,21 +29,33 @@ namespace Benchy.Internal
                 var teardownMethods = GetAttributedMethods<TeardownAttribute>(type);
                 var benchmarkMethods = GetAttributedMethods<BenchmarkAttribute>(type);
 
-                list.AddRange(from benchmarkMethod in benchmarkMethods.Where(m => IsValidBenchmarkMethod(m, logger))
-                              let benchmarkAttr = benchmarkMethod.GetCustomAttribute<BenchmarkAttribute>()
-                              let benchmarkFixtureAttr = type.GetCustomAttribute<BenchmarkFixtureAttribute>()
-                              where !benchmarkFixtureAttr.Ignore
-                              select new ExternalBenchmarkTest
-                                  {
-                                      Category = benchmarkFixtureAttr.Category,
-                                      SetupAction = CreateAction(setupMethods, obj),
-                                      ExecuteAction = () => benchmarkMethod.Invoke(obj, null),
-                                      TeardownAction = CreateAction(teardownMethods, obj),
-                                      ExecutionCount = benchmarkAttr.ExecutionCount, 
-                                      Name = obj.GetType().Name, 
-                                      FailTime = GetTimespan(benchmarkAttr.FailureTimeInTicks, benchmarkAttr.FailureTimeInMilliseconds, benchmarkAttr.FailureTimeInSeconds), 
-                                      WarnTime = GetTimespan(benchmarkAttr.WarningTimeInTicks, benchmarkAttr.WarningTimeInMilliseconds, benchmarkAttr.WarningTimeInSeconds)
-                                  });
+                foreach (var benchmarkMethod in benchmarkMethods.Where(m => IsValidBenchmarkMethod(m, logger)))
+                {
+                    var method = benchmarkMethod;
+                    var benchmarkFixtureAttr = type.GetCustomAttribute<BenchmarkFixtureAttribute>();
+                    if(benchmarkFixtureAttr.Ignore)
+                        continue;
+
+                    var benchmarkAttrs = benchmarkMethod.GetCustomAttributes<BenchmarkAttribute>();
+
+                    var benchmarkAttributes = benchmarkAttrs as BenchmarkAttribute[] ?? benchmarkAttrs.ToArray();
+                    for (var i = 0; i < benchmarkAttributes.Count(); i++)
+                    {
+                        var att = benchmarkAttributes[i];
+                        list.Add(new ExternalBenchmarkTest
+                                      {
+                                          Category = benchmarkFixtureAttr.Category, 
+                                          SetupAction = CreateAction(setupMethods, obj), 
+                                          ExecuteAction = () => method.Invoke(obj, att.Parameters), 
+                                          TeardownAction = CreateAction(teardownMethods, obj), 
+                                          ExecutionCount = att.ExecutionCount, 
+                                          TypeName = obj.GetType().Name,
+                                          Name = method.Name + " #" + (i + 1), 
+                                          FailTime = GetTimespan(att.FailureTimeInTicks, att.FailureTimeInMilliseconds, att.FailureTimeInSeconds), 
+                                          WarnTime = GetTimespan(att.WarningTimeInTicks, att.WarningTimeInMilliseconds, att.WarningTimeInSeconds)
+                                      });
+                    }         
+                }                              
             }
             return list;
         }
@@ -61,10 +73,10 @@ namespace Benchy.Internal
             if (benchmarkMethod == null) throw new ArgumentNullException("benchmarkMethod");
             if (logger == null) throw new ArgumentNullException("logger");
 
-            if (benchmarkMethod.GetParameters().Any())
+            if (benchmarkMethod.GetParameters().Any(t => t.IsOut))
             {
-                logger.WriteEntry(string.Format("{0} is an invalid Benchmark method. Benchmark method cannot have parameters.", benchmarkMethod.Name)
-                    , LogLevel.FixtureSetup);
+                logger.WriteEntry(string.Format("{0} is an invalid Benchmark method. Benchmark method cannot have out parameters.", benchmarkMethod.Name)   
+                                    , LogLevel.FixtureSetup);
                 return false;
             }
             return true;

@@ -23,6 +23,7 @@ namespace Benchy.Internal
         public IExecutionResults[] ExecuteTests(IEnumerable<IBenchmarkTest> tests)
         {
             var returnList = new List<IExecutionResults>();
+            _logger.WriteEntry(String.Format("Test runner starting. {0}", DateTime.Now), LogLevel.Setup);
             var performanceTestPasses = PerformTests(tests);
 
             foreach (var item in performanceTestPasses)
@@ -30,13 +31,21 @@ namespace Benchy.Internal
                 returnList.Add(item);
                 LogResult(item);
             }
-
+            _logger.WriteEntry(String.Format("Test runner complete. {0}", DateTime.Now), LogLevel.Setup);
             return returnList.ToArray();
         }
         
         void LogResult(IExecutionResults item)
         {
-            _logger.WriteEntry(string.Format("\r\n{0} Status: {1}\r\n", item.Name, item.ResultStatus),
+            
+            _logger.WriteEntry(string.Format("\r\nCategory: {0}", string.IsNullOrWhiteSpace(item.Category) ? "Benchmark Tests" : item.Category),
+                LogLevel.Results);
+
+
+            _logger.WriteEntry(string.Format("{0}", item.TypeName),
+                LogLevel.Results);
+
+            _logger.WriteEntry(string.Format("{0} Status: {1}\r\n", item.Name, item.ResultStatus),
                 LogLevel.Results);
 
             _logger.WriteEntry(string.Format("{0}", item.ResultText),
@@ -130,14 +139,14 @@ namespace Benchy.Internal
 
         private IEnumerable<ExecutionResults> PerformTests(IEnumerable<IBenchmarkTest> tests)
         {
-            foreach (var test in tests.Select(t => new HostedBenchmarkTest(t)))
+            foreach (var test in tests.Select(t => new HostedBenchmarkTest(t, _logger)))
             {
-                var result = new ExecutionResults { Name = test.Name };
+                var result = new ExecutionResults { Name = test.Name, TypeName = test.TypeName, Category = test.Category };
                 var resultStatus = ResultStatus.Indeterminate;
 
                 try
                 {
-                    _logger.WriteEntry(string.Format("{0}: Setup", test.Name),
+                    _logger.WriteEntry(string.Format("\r\n{0}.{1}: Setup", test.TypeName, test.Name),
                         LogLevel.Setup);
                     
                     test.Setup();
@@ -152,6 +161,7 @@ namespace Benchy.Internal
 
                         _logger.WriteEntry(testPassName,
                             LogLevel.Execution);
+
                         var testPass = new TestPass { 
                             TestName = testPassName, 
                             ExceptionOccurred = test.ThrewException, 
@@ -221,15 +231,21 @@ namespace Benchy.Internal
         private class HostedBenchmarkTest
         {
             private readonly IBenchmarkTest _hostedTest;
+            private readonly ILogger _logger;
 
-            public HostedBenchmarkTest(IBenchmarkTest hostedTest)
+            public HostedBenchmarkTest(IBenchmarkTest hostedTest, ILogger logger)
             {
                 _hostedTest = hostedTest;
+                _logger = logger;
             }
 
             public TimeSpan ExecutionTime { get; private set; }
             public string ExceptionName { get; private set; }
             public bool ThrewException { get; private set; }
+            public string TypeName {
+                get { return _hostedTest.TypeName; }
+            }
+            public string Category { get { return _hostedTest.Category; } }
 
             public TimeSpan Fail {
                 get { return _hostedTest.FailTime ?? TimeSpan.MaxValue; }
@@ -262,7 +278,9 @@ namespace Benchy.Internal
             {
                 try
                 {
+                    _logger.WriteEntry("SETUP START", LogLevel.Setup);
                     _hostedTest.Setup();
+                    _logger.WriteEntry("SETUP COMPLETE", LogLevel.Setup);
                 }
                 catch (Exception e)
                 {
@@ -274,7 +292,9 @@ namespace Benchy.Internal
             {
                 try
                 {
+                    _logger.WriteEntry("TEARDOWN START", LogLevel.Teardown);
                     _hostedTest.Teardown();
+                    _logger.WriteEntry("TEARDOWN COMPLETE", LogLevel.Teardown);
                 }
                 catch (Exception e)
                 {
@@ -287,6 +307,7 @@ namespace Benchy.Internal
                 var watch = new Stopwatch();
                 try
                 {
+                    _logger.WriteEntry("EXECUTION START", LogLevel.Execution);
                     watch.Start();
                     _hostedTest.Execute();
                     watch.Stop();
@@ -294,15 +315,19 @@ namespace Benchy.Internal
                 catch (Exception e)
                 {
                     ThrewException = true;
-                    ExceptionName = e.GetType().Name;
+                    ExceptionName = e.GetType().Name; 
+                    _logger.WriteEntry("EXECUTION EXCEPTION", LogLevel.Execution | LogLevel.Exception);
                 }
                 finally
                 {
                     if (watch.IsRunning)
                     {
                         watch.Stop();
+                        
                     }
                     ExecutionTime = watch.Elapsed;
+                    _logger.WriteEntry("EXECUTION COMPLETE", LogLevel.Execution);
+                    
                 }
             }
         }

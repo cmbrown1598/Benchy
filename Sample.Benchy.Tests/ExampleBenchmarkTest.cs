@@ -4,7 +4,7 @@ using Benchy;
 
 namespace Sample.Benchy.Tests
 {
-    [BenchmarkFixture(Ignore=true)]
+    [BenchmarkFixture]
     class ExampleBenchmarkTest
     {
         private DataSet _ds;
@@ -23,7 +23,7 @@ namespace Sample.Benchy.Tests
             _ds = null;
         }
 
-        [Benchmark(ExecutionCount = 50, FailureTimeInTicks = 500)]
+        [Benchmark(ExecutionCount = 50)]
         public void Execute()
         {
             var row = _ds.Tables[0].NewRow();

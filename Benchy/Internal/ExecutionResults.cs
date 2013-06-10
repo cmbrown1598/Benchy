@@ -89,6 +89,10 @@ namespace Benchy.Internal
 
         public string Name { get; set; }
 
+        public string TypeName { get; internal set; }
+
+        public string Category { get; internal set; }
+
 
         public IDataBreakout[] GetBreakout()
         {

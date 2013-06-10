@@ -17,6 +17,8 @@ namespace Benchy.Internal
             set;
         }
 
+        public string TypeName { get; set; }
+
         public void Setup()
         {
             SetupAction();

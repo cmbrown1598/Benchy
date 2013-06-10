@@ -16,6 +16,7 @@ namespace Benchy
         public IEnumerable<IExecutionResults> Execute()
         {
             var tests = AssemblyLoader.LoadTests(_options.Logger, _options.Files);
+            
             var runner = new TestRunner(_options.Logger);
             return runner.ExecuteTests(tests);
         }

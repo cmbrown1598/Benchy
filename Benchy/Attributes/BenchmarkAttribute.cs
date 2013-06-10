@@ -5,10 +5,17 @@ namespace Benchy
     /// <summary>
     /// Attribute that indicates a method is a benchmark test method.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class BenchmarkAttribute : Attribute
     {
+        public object[] Parameters { get; set; }
+
         private ushort _executionCount = 1;
+
+        public BenchmarkAttribute(params object[] parameters)
+        {
+            Parameters = parameters;
+        }
 
         /// <summary>
         /// Number of times the test should execute.
