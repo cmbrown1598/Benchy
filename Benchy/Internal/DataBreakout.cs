@@ -15,25 +15,26 @@ namespace Benchy.Internal
             return string.Format("{0} - {1} : {2}", RangeMinValue, RangeMaxValue, Occurences);
         }
 
-        public static IDataBreakout[] GetBreakouts(TimeSpan[] input, int countOfBreakouts)
+        public static IDataBreakout[] GetBreakouts(TimeSpan[] input)
         {
             var min = input.Min(m => m.Ticks);
             var max = input.Max(m => m.Ticks);
+            var countOfBreakouts = Math.Min((input.Count() / 5), 8);
+
+            
             var width = ((max - min) + 1)/countOfBreakouts;
-
             var l = new List<IDataBreakout>();
-            for (var i = countOfBreakouts; i > 0; i--)
+            for (var i = 0; i < countOfBreakouts; i++)
             {
-                var rMax = width*i > max ? max : (width*i);
-                var rMin = width*(i - 1) < min ? min : (width*(i - 1));
-
+                var rMin = min + (width*i);
+                var rMax = (i + 1 == countOfBreakouts) ? max : min + (width*(i + 1));
                 var line = new DataBreakout
                     {
                         RangeMaxValue = TimeSpan.FromTicks(rMax),
                         RangeMinValue = TimeSpan.FromTicks(rMin)
                     };
                 line.Occurences = input.Count(m => m <= line.RangeMaxValue && m >= line.RangeMinValue);
-                l.Insert(0, line);
+                l.Add(line);
             }
             return l.ToArray();
         }

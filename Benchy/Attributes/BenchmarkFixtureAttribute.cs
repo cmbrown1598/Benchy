@@ -12,5 +12,10 @@ namespace Benchy
         /// The category for the running test.
         /// </summary>
         public string Category { get; set; }
+        
+        /// <summary>
+        /// Tells the engine not to run the test.
+        /// </summary>
+        public bool Ignore { get; set; }
     }
 }

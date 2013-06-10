@@ -32,6 +32,7 @@ namespace Benchy.Internal
                 list.AddRange(from benchmarkMethod in benchmarkMethods.Where(m => IsValidBenchmarkMethod(m, logger))
                               let benchmarkAttr = benchmarkMethod.GetCustomAttribute<BenchmarkAttribute>()
                               let benchmarkFixtureAttr = type.GetCustomAttribute<BenchmarkFixtureAttribute>()
+                              where !benchmarkFixtureAttr.Ignore
                               select new ExternalBenchmarkTest
                                   {
                                       Category = benchmarkFixtureAttr.Category,

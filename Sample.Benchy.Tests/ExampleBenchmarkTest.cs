@@ -4,7 +4,7 @@ using Benchy;
 
 namespace Sample.Benchy.Tests
 {
-    [BenchmarkFixture]
+    [BenchmarkFixture(Ignore=true)]
     class ExampleBenchmarkTest
     {
         private DataSet _ds;

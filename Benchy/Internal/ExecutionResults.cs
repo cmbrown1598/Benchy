@@ -84,9 +84,9 @@ namespace Benchy.Internal
         public string Name { get; set; }
 
 
-        public IDataBreakout[] GetBreakout(int countOfBreakoutItems = 5)
+        public IDataBreakout[] GetBreakout()
         {
-            return DataBreakout.GetBreakouts(_testPasses.Select(m => m.ExecutionTime).ToArray(), countOfBreakoutItems);
+            return DataBreakout.GetBreakouts(_testPasses.Select(m => m.ExecutionTime).ToArray());
         }
 
         public IEnumerable<IExecutionExceptionInformation> GetExecutionExceptions()
