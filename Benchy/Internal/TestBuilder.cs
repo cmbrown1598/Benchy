@@ -83,15 +83,12 @@ namespace Benchy.Internal
         
         public static TimeSpan? GetTimespan(long ticks, long milliseconds, long seconds)
         {
-            if(seconds > 0)
-                return TimeSpan.FromSeconds(seconds);
-
-            if (milliseconds > 0)
-                return TimeSpan.FromMilliseconds(milliseconds);
-
             if (ticks > 0)
                 return TimeSpan.FromTicks(ticks);
-            
+            if (milliseconds > 0)
+                return TimeSpan.FromMilliseconds(milliseconds);
+            if(seconds > 0)
+                return TimeSpan.FromSeconds(seconds);
             return null;
         }
 

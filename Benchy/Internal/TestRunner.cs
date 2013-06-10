@@ -114,7 +114,7 @@ namespace Benchy.Internal
                                LogLevel.Results | LogLevel.Teardown | LogLevel.Exception);
         }
 
-        private string TimeSpanText(TimeSpan t)
+        private static string TimeSpanText(TimeSpan t)
         {
             if (t.Seconds > 0)
                 return t.Seconds + 1 + " seconds";
