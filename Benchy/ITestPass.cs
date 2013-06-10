@@ -13,6 +13,11 @@ namespace Benchy
         string TestName { get; }
 
         /// <summary>
+        /// The name of the test.
+        /// </summary>
+        ResultStatus Status { get; }
+
+        /// <summary>
         /// Flag indicating whether or not an exception occurred while executing the test.
         /// </summary>
         bool ExceptionOccurred { get; }

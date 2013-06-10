@@ -16,6 +16,7 @@ namespace Benchy.Internal
             get { return _resultStatus; }
             internal set { _resultStatus = value; }
         }
+        public string ResultText { get; internal set; }
 
         public bool ThrewExceptionOnSetup
         {

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 
 namespace Benchy.Internal
 {
@@ -35,27 +36,48 @@ namespace Benchy.Internal
         
         void LogResult(IExecutionResults item)
         {
-            _logger.WriteEntry(string.Format("{0} Status: {1}", item.Name, item.ResultStatus),
+            _logger.WriteEntry(string.Format("\r\n{0} Status: {1}\r\n", item.Name, item.ResultStatus),
                 LogLevel.Results);
 
-            _logger.WriteEntry(string.Format("Longest time: {0}", item.LongestTime),
+            _logger.WriteEntry(string.Format("{0}", item.ResultText),
                 LogLevel.Results);
 
-            _logger.WriteEntry(string.Format("Shortest time: {0}", item.ShortestTime),
+            if (item.ResultStatus >= ResultStatus.Warning)
+            {
+                var breakdown = new Dictionary<ResultStatus, int>();
+                foreach (var execution in item.Data)
+                {
+                    if (!breakdown.ContainsKey(execution.Status))
+                        breakdown[execution.Status] = 0;
+                    breakdown[execution.Status]++;
+                }
+                var sb = new StringBuilder();
+                var i = from m in breakdown orderby m.Key select string.Format("\t{0}: {1}", m.Key, m.Value);
+                foreach (var j in i)
+                {
+                    sb.AppendLine(j);
+                }
+                _logger.WriteEntry(sb.ToString(), LogLevel.Results);
+            }
+
+            _logger.WriteEntry(string.Format("Longest time:\r\n\t{0}", item.LongestTime),
                 LogLevel.Results);
 
-            _logger.WriteEntry(string.Format("Average time: {0}", item.MeanTime),
+            _logger.WriteEntry(string.Format("Shortest time:\r\n\t{0}", item.ShortestTime),
                 LogLevel.Results);
 
-            _logger.WriteEntry(string.Format("Standard Deviation: {0}", item.StdDev),
+            _logger.WriteEntry(string.Format("Average time:\r\n\t{0}", item.MeanTime),
                 LogLevel.Results);
 
-            _logger.WriteEntry(item.Name + " Time Breakout",
+            _logger.WriteEntry(string.Format("Standard Deviation:\r\n\t{0}", item.StdDev),
+                LogLevel.Results);
+
+            _logger.WriteEntry("Execution Time Breakout:",
                 LogLevel.Results);
 
             foreach (var brek in item.GetBreakout())
             {
-                _logger.WriteEntry(brek.GetText(),
+                _logger.WriteEntry("\t" + brek.GetText(),
                     LogLevel.Results);
             }
 
@@ -108,32 +130,30 @@ namespace Benchy.Internal
 
                     for (var i = 0; i <= test.ExecutionCount; i++)
                     {
+                        test.Execute();
+
                         var testPassName = i == 0
-                                               ? string.Format("{0} Initialization", test.Name)
-                                               : string.Format("{1} Execution, Pass #{0}", i, test.Name);
+                                              ? string.Format("{0} Initialization", test.Name)
+                                              : string.Format("{1} Execution, Pass #{0} : {2}", i, test.Name, test.GetResult());
 
                         _logger.WriteEntry(testPassName,
                             LogLevel.Execution);
-
-                        test.Execute();
-
                         var testPass = new TestPass { 
                             TestName = testPassName, 
                             ExceptionOccurred = test.ThrewException, 
                             ExceptionTypeName = test.ExceptionName, 
-                            ExecutionTime = test.ExecutionTime };
-                        
-                        if (test.ThrewException || i > 0)
-                        {
-                            result.AddTestPass(testPass);
-                        }
+                            ExecutionTime = test.ExecutionTime,
+                            Status = test.GetResult()
+                        };
 
-                        // maybe a touch brittle, but works. Any failure = a failure.
+                        if (!test.ThrewException && i <= 0) continue;
+                        
                         resultStatus = (ResultStatus)
-                            Math.Max(
-                                (int)test.GetResult(), 
-                                (int)resultStatus
-                            );
+                                       Math.Max(
+                                           (int)test.GetResult(),
+                                           (int)resultStatus
+                                           );
+                        result.AddTestPass(testPass);
                     }
                     
                     _logger.WriteEntry(string.Format("{0}: Teardown", test.Name),
@@ -147,6 +167,7 @@ namespace Benchy.Internal
                         LogLevel.Exception | LogLevel.Setup);
 
                     result.SetupException = setup;
+                    result.ResultText = "Test threw an exception during Setup.";
                     resultStatus = ResultStatus.Failed;
                 }
                 catch (TeardownException teardownException)
@@ -155,12 +176,25 @@ namespace Benchy.Internal
                         LogLevel.Exception | LogLevel.Teardown);
 
                     result.TeardownException = teardownException;
+                    result.ResultText = "Test threw an exception during Teardown.";
                     resultStatus = ResultStatus.Failed;
                 }
 
                 // set the status
                 result.ResultStatus = resultStatus;
+                if (result.ResultStatus == ResultStatus.Success)
+                {
+                    result.ResultText = "SUCCESS: Test succeeded.";
+                }
+                if (result.ResultStatus == ResultStatus.Warning)
+                {
+                    result.ResultText = string.Format("WARNING: Maximum execution time was: {0}, \r\n\tpast the warning time {1}", result.LongestTime, test.Warn);
+                }
                 
+                if (result.ResultStatus == ResultStatus.Failed)
+                {
+                    result.ResultText = string.Format("FAILED: Maximum execution time was: {0}, \r\n\tpast the failure time {1}", result.LongestTime, test.Fail);
+                }
                 yield return result;
             }
         }
@@ -183,16 +217,22 @@ namespace Benchy.Internal
             public string ExceptionName { get; private set; }
             public bool ThrewException { get; private set; }
 
+            public TimeSpan Fail {
+                get { return _hostedTest.FailTime ?? TimeSpan.MaxValue; }
+            }
+
+            public TimeSpan Warn
+            {
+                get { return  _hostedTest.WarnTime ?? TimeSpan.MaxValue; }
+            }
+
             public ResultStatus GetResult()
             {
                 // if fail is null, and warning is null, return Success, if there wasn't an exception.
-                var fail = _hostedTest.FailTime ?? TimeSpan.MaxValue;
-                var warn = _hostedTest.WarnTime ?? TimeSpan.MaxValue;
-                
-                if(ThrewException || ExecutionTime > fail)
+                if(ThrewException || ExecutionTime.Ticks > Fail.Ticks)
                     return ResultStatus.Failed;
                 
-                return ExecutionTime > warn ? ResultStatus.Warning : ResultStatus.Success;
+                return ExecutionTime.Ticks > Warn.Ticks ? ResultStatus.Warning : ResultStatus.Success;
             }
 
             public uint ExecutionCount {

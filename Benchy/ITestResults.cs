@@ -19,6 +19,7 @@ namespace Benchy
         TimeSpan MeanTime { get; }
         ITestPass[] Data { get; }
         string Name { get; set; }
+        string ResultText { get; }
         IDataBreakout[] GetBreakout();
         IEnumerable<IExecutionExceptionInformation> GetExecutionExceptions();
     }

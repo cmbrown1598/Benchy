@@ -20,5 +20,9 @@ namespace Benchy.Internal
         /// The time the individual test ran in.
         /// </summary>
         public TimeSpan ExecutionTime { get; internal set; }
+
+        public ResultStatus Status { get;
+            internal set;
+        }
     }
 }
