@@ -33,9 +33,9 @@ namespace Benchy.Internal
             return returnList.ToArray();
         }
         
-        void LogResult(ExecutionResults item)
+        void LogResult(IExecutionResults item)
         {
-            _logger.WriteEntry(item.Name + " Statistics",
+            _logger.WriteEntry(string.Format("{0} Status: {1}", item.Name, item.ResultStatus),
                 LogLevel.Results);
 
             _logger.WriteEntry(string.Format("Longest time: {0}", item.LongestTime),
@@ -97,6 +97,7 @@ namespace Benchy.Internal
             foreach (var test in tests.Select(t => new HostedBenchmarkTest(t)))
             {
                 var result = new ExecutionResults { Name = test.Name };
+                var resultStatus = ResultStatus.Indeterminate;
 
                 try
                 {
@@ -116,12 +117,23 @@ namespace Benchy.Internal
 
                         test.Execute();
 
-                        var testPass = new TestPass { TestName = testPassName, ExceptionOccurred = test.ThrewException, ExceptionTypeName = test.ExceptionName, ExecutionTime = test.ExecutionTime };
+                        var testPass = new TestPass { 
+                            TestName = testPassName, 
+                            ExceptionOccurred = test.ThrewException, 
+                            ExceptionTypeName = test.ExceptionName, 
+                            ExecutionTime = test.ExecutionTime };
                         
                         if (test.ThrewException || i > 0)
                         {
                             result.AddTestPass(testPass);
                         }
+
+                        // maybe a touch brittle, but works. Any failure = a failure.
+                        resultStatus = (ResultStatus)
+                            Math.Max(
+                                (int)test.GetResult(), 
+                                (int)resultStatus
+                            );
                     }
                     
                     _logger.WriteEntry(string.Format("{0}: Teardown", test.Name),
@@ -135,6 +147,7 @@ namespace Benchy.Internal
                         LogLevel.Exception | LogLevel.Setup);
 
                     result.SetupException = setup;
+                    resultStatus = ResultStatus.Failed;
                 }
                 catch (TeardownException teardownException)
                 {
@@ -142,18 +155,12 @@ namespace Benchy.Internal
                         LogLevel.Exception | LogLevel.Teardown);
 
                     result.TeardownException = teardownException;
+                    resultStatus = ResultStatus.Failed;
                 }
 
                 // set the status
-                if (result.HasExceptions)
-                {
-                    result.ResultStatus = ResultStatus.Failed;
-                }
-
-
+                result.ResultStatus = resultStatus;
                 
-
-
                 yield return result;
             }
         }
@@ -175,6 +182,18 @@ namespace Benchy.Internal
             public TimeSpan ExecutionTime { get; private set; }
             public string ExceptionName { get; private set; }
             public bool ThrewException { get; private set; }
+
+            public ResultStatus GetResult()
+            {
+                // if fail is null, and warning is null, return Success, if there wasn't an exception.
+                var fail = _hostedTest.FailTime ?? TimeSpan.MaxValue;
+                var warn = _hostedTest.WarnTime ?? TimeSpan.MaxValue;
+                
+                if(ThrewException || ExecutionTime > fail)
+                    return ResultStatus.Failed;
+                
+                return ExecutionTime > warn ? ResultStatus.Warning : ResultStatus.Success;
+            }
 
             public uint ExecutionCount {
                 get { return _hostedTest.ExecutionCount; }

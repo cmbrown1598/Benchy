@@ -12,7 +12,7 @@ namespace Sample.Benchy.Tests
             Console.WriteLine("This sets up nothing.");
         }
 
-        [Benchmark(ExecutionCount = 20)]
+        [Benchmark(ExecutionCount = 20, WarningTimeInTicks = 26000)]
         public void Execute()
         {
             var j = 0;

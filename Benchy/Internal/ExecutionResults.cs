@@ -9,8 +9,13 @@ namespace Benchy.Internal
     class ExecutionResults : IExecutionResults
     {
         private readonly List<ITestPass> _testPasses = new List<ITestPass>();
+        private ResultStatus _resultStatus = ResultStatus.Indeterminate;
 
-        public ResultStatus ResultStatus { get; internal set; }
+        public ResultStatus ResultStatus
+        {
+            get { return _resultStatus; }
+            internal set { _resultStatus = value; }
+        }
 
         public bool ThrewExceptionOnSetup
         {
