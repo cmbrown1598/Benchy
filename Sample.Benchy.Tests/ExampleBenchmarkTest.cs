@@ -23,7 +23,7 @@ namespace Sample.Benchy.Tests
             _ds = null;
         }
 
-        [Benchmark(ExecutionCount = 50)]
+        [Benchmark]
         public void Execute()
         {
             var row = _ds.Tables[0].NewRow();

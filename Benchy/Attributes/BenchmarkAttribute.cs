@@ -12,6 +12,10 @@ namespace Benchy
 
         private ushort _executionCount = 1;
 
+        public BenchmarkAttribute()
+        {
+        }
+
         public BenchmarkAttribute(params object[] parameters)
         {
             Parameters = parameters;

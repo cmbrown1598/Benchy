@@ -21,7 +21,12 @@ namespace Benchy.Internal
             var max = input.Max(m => m.Ticks);
             var countOfBreakouts = Math.Min((input.Count() / 5), 8);
 
-            
+            if (countOfBreakouts < 1)
+            {
+                countOfBreakouts = 1;
+            }
+
+
             var width = ((max - min) + 1)/countOfBreakouts;
             var l = new List<IDataBreakout>();
             for (var i = 0; i < countOfBreakouts; i++)
