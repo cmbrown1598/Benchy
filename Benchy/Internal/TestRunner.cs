@@ -60,16 +60,16 @@ namespace Benchy.Internal
                 _logger.WriteEntry(sb.ToString(), LogLevel.Results);
             }
 
-            _logger.WriteEntry(string.Format("Longest time:\r\n\t{0}", item.LongestTime),
+            _logger.WriteEntry(string.Format("Longest time:\r\n\t{0} ({1})", item.LongestTime, TimeSpanText(item.LongestTime)),
                 LogLevel.Results);
 
-            _logger.WriteEntry(string.Format("Shortest time:\r\n\t{0}", item.ShortestTime),
+            _logger.WriteEntry(string.Format("Shortest time:\r\n\t{0} ({1})", item.ShortestTime, TimeSpanText(item.ShortestTime)),
                 LogLevel.Results);
 
-            _logger.WriteEntry(string.Format("Average time:\r\n\t{0}", item.MeanTime),
+            _logger.WriteEntry(string.Format("Average time:\r\n\t{0} ({1})", item.MeanTime, TimeSpanText(item.MeanTime)),
                 LogLevel.Results);
 
-            _logger.WriteEntry(string.Format("Standard Deviation:\r\n\t{0}", item.StdDev),
+            _logger.WriteEntry(string.Format("Standard Deviation:\r\n\t{0} ({1})", item.StdDev, TimeSpanText(item.StdDev)),
                 LogLevel.Results);
 
             _logger.WriteEntry("Execution Time Breakout:",
@@ -112,6 +112,20 @@ namespace Benchy.Internal
 
             _logger.WriteEntry(item.TeardownException.ToString(),
                                LogLevel.Results | LogLevel.Teardown | LogLevel.Exception);
+        }
+
+        private string TimeSpanText(TimeSpan t)
+        {
+            if (t.Seconds > 0)
+                return t.Seconds + 1 + " seconds";
+
+            if (t.Milliseconds > 0)
+                return t.Milliseconds + 1 + " milliseconds";
+
+            if (t.Ticks > 0)
+                return t.Ticks + 1 + " ticks";
+
+            return "Infinity";
         }
 
         private IEnumerable<ExecutionResults> PerformTests(IEnumerable<IBenchmarkTest> tests)
@@ -188,12 +202,12 @@ namespace Benchy.Internal
                 }
                 if (result.ResultStatus == ResultStatus.Warning)
                 {
-                    result.ResultText = string.Format("WARNING: Maximum execution time was: {0}, \r\n\tpast the warning time {1}", result.LongestTime, test.Warn);
+                    result.ResultText = string.Format("WARNING: Maximum execution time was: {0}, past the warning time {1}", result.LongestTime, test.Warn);
                 }
                 
                 if (result.ResultStatus == ResultStatus.Failed)
                 {
-                    result.ResultText = string.Format("FAILED: Maximum execution time was: {0}, \r\n\tpast the failure time {1}", result.LongestTime, test.Fail);
+                    result.ResultText = string.Format("FAILED: Maximum execution time was: {0}, past the failure time {1}", result.LongestTime, test.Fail);
                 }
                 yield return result;
             }
