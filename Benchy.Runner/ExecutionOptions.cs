@@ -14,7 +14,7 @@ namespace Benchy.Runner
         /// <summary>
         /// The results writer to use.
         /// </summary>
-        public IExecutionResultsWriter ResultsWriter { get; set; }
+        public IExecutionResultsFormatter ResultsFormatter { get; set; }
 
 
         /// <summary>
@@ -22,12 +22,14 @@ namespace Benchy.Runner
         /// </summary>
         /// <param name="files"></param>
         /// <param name="logger"></param>
-        /// <param name="writer"></param>
-        public ExecutionOptions(string[] files, ILogger logger, IExecutionResultsWriter writer = null)
+        /// <param name="formatter"></param>
+        public ExecutionOptions(string[] files, 
+            ILogger logger = null, 
+            IExecutionResultsFormatter formatter = null)
         {
             Files = files;
-            Logger = logger;
-            ResultsWriter = writer ?? new ExecutionResultsWriter(logger);
+            Logger = logger ?? new ConsoleLogger(LogLevel.Results);
+            ResultsFormatter = formatter ?? new ExecutionResultsFormatter();
         }
     }
 }

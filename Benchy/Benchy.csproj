@@ -56,11 +56,10 @@
     <Compile Include="Attributes\BenchmarkAttribute.cs" />
     <Compile Include="Attributes\BenchmarkFixtureAttribute.cs" />
     <Compile Include="Engine.cs" />
-    <Compile Include="ExecutionResultsWriter.cs" />
     <Compile Include="IDataBreakout.cs" />
     <Compile Include="IExecutionExceptionInformation.cs" />
     <Compile Include="IExecutionOptions.cs" />
-    <Compile Include="IExecutionResultsWriter.cs" />
+    <Compile Include="IExecutionResultsFormatter.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="Internal\AssemblyLoader.cs" />
     <Compile Include="Internal\DataBreakout.cs" />
@@ -68,7 +67,6 @@
     <Compile Include="Internal\ExternalBenchmarkTest.cs" />
     <Compile Include="Internal\HostedBenchmarkTest.cs" />
     <Compile Include="Internal\IBenchmarkTest.cs" />
-    <Compile Include="Internal\ITestRunner.cs" />
     <Compile Include="Internal\TestBuilder.cs" />
     <Compile Include="Internal\TestPass.cs" />
     <Compile Include="Internal\ExecutionResults.cs" />

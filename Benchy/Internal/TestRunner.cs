@@ -1,19 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Benchy.Internal
 {
-    sealed class TestRunner : ITestRunner
+    sealed class TestRunner : IDisposable
     {
         private ILogger _logger;
-        private readonly IExecutionResultsWriter _writer;
+        private IExecutionResultsFormatter _formatter;
 
-        public TestRunner(ILogger logger, IExecutionResultsWriter writer)
+        public TestRunner(ILogger logger, IExecutionResultsFormatter formatter)
         {
             _logger = logger;
-            _writer = writer;
+            _formatter = formatter;
         }
 
         /// <summary>
@@ -23,42 +22,47 @@ namespace Benchy.Internal
         /// <returns></returns>
         public IExecutionResults[] ExecuteTests(IEnumerable<IBenchmarkTest> tests)
         {
-            var returnList = new List<IExecutionResults>();
             _logger.WriteEntry(String.Format("Test runner starting. {0}", DateTime.Now), LogLevel.Setup);
-            var performanceTestPasses = PerformTests(tests);
 
-            foreach (var item in performanceTestPasses)
+            var list = new List<IExecutionResults>();
+            foreach (var performanceTestPass in PerformTests(tests))
             {
-                returnList.Add(item);
+                _logger.WriteEntry(_formatter.FormatResult(performanceTestPass), LogLevel.Results);
+                list.Add(performanceTestPass);
             }
             _logger.WriteEntry(String.Format("Test runner complete. {0}", DateTime.Now), LogLevel.Setup);
-            return returnList.ToArray();
+
+            
+            return list.ToArray();
         }
 
-        private IEnumerable<ExecutionResults> PerformTests(IEnumerable<IBenchmarkTest> tests)
+        private IEnumerable<IExecutionResults> PerformTests(IEnumerable<IBenchmarkTest> tests)
         {
             foreach (var test in tests.Select(t => new HostedBenchmarkTest(t, _logger)))
             {
-                var result = new ExecutionResults { Name = test.Name, TypeName = test.TypeName, Category = test.Category };
+                var result = new ExecutionResults { 
+                    Name = test.Name, 
+                    TypeName = test.TypeName, 
+                    Category = test.Category };
+
                 var resultStatus = ResultStatus.Indeterminate;
 
                 try
                 {
-                    _logger.WriteEntry(string.Format("\r\n{0}.{1}: Setup", test.TypeName, test.Name),
+                    _logger.WriteEntry(string.Format("{0}.{1}: Setup", test.TypeName, test.Name),
                         LogLevel.Setup);
                     
                     test.Setup();
 
                     for (var i = 0; i <= test.ExecutionCount; i++)
                     {
-                        test.Execute();
-
                         var testPassName = i == 0
-                                              ? string.Format("{0} Initialization", test.Name)
-                                              : string.Format("{1} Execution, Pass #{0} : {2}", i, test.Name, test.GetResult());
+                                                ? string.Format("{0} Initialization", test.Name)
+                                                : string.Format("{1} Execution, Pass #{0}", i, test.Name);
 
-                        _logger.WriteEntry(testPassName,
-                            LogLevel.Execution);
+                        _logger.WriteEntry(testPassName + " Start", LogLevel.Execution);
+
+                        test.Execute();
 
                         var testPass = new TestPass { 
                             TestName = testPassName, 
@@ -68,6 +72,8 @@ namespace Benchy.Internal
                             Status = test.GetResult()
                         };
 
+                        _logger.WriteEntry(testPass.TestName + " " + testPass.Status, LogLevel.Execution);
+
                         if (!test.ThrewException && i <= 0) continue;
                         
                         resultStatus = (ResultStatus)
@@ -75,6 +81,7 @@ namespace Benchy.Internal
                                            (int)test.GetResult(),
                                            (int)resultStatus
                                            );
+
                         result.AddTestPass(testPass);
                     }
                     
@@ -89,6 +96,7 @@ namespace Benchy.Internal
                         LogLevel.Exception | LogLevel.Setup);
 
                     result.SetupException = setup;
+
                     result.ResultText = "Test threw an exception during Setup.";
                     resultStatus = ResultStatus.Failed;
                 }
@@ -98,35 +106,44 @@ namespace Benchy.Internal
                         LogLevel.Exception | LogLevel.Teardown);
 
                     result.TeardownException = teardownException;
+                    
                     result.ResultText = "Test threw an exception during Teardown.";
                     resultStatus = ResultStatus.Failed;
                 }
 
-                // set the status
-                result.ResultStatus = resultStatus;
-                if (result.ResultStatus == ResultStatus.Success)
-                {
-                    result.ResultText = "SUCCESS: Test succeeded.";
-                }
-                if (result.ResultStatus == ResultStatus.Warning)
-                {
-                    result.ResultText = string.Format("WARNING: Maximum execution time was: {0}, past the warning time {1}", result.LongestTime, test.Warn);
-                }
-                
-                if (result.ResultStatus == ResultStatus.Failed)
-                {
-                    result.ResultText = string.Format("FAILED: Maximum execution time was: {0}, past the failure time {1}", result.LongestTime, test.Fail);
-                }
-                
-                _writer.WriteResult(result);
+                SetStatus(result, resultStatus, test);
+
                 
                 yield return result;
+            }
+        }
+
+        private static void SetStatus(ExecutionResults result, ResultStatus resultStatus, HostedBenchmarkTest test)
+        {
+            result.ResultStatus = resultStatus;
+
+            if (result.ResultStatus == ResultStatus.Success)
+            {
+                result.ResultText = "SUCCESS: Test succeeded.";
+            }
+
+            if (result.ResultStatus == ResultStatus.Warning)
+            {
+                result.ResultText = string.Format("WARNING: Maximum execution time was: {0}, past the warning time {1}",
+                                                  result.LongestTime, test.Warn);
+            }
+
+            if (result.ResultStatus == ResultStatus.Failed)
+            {
+                result.ResultText = string.Format("FAILED: Maximum execution time was: {0}, past the failure time {1}",
+                                                  result.LongestTime, test.Fail);
             }
         }
 
         public void Dispose()
         {
             _logger = null;
+            _formatter = null;
         }
 
         

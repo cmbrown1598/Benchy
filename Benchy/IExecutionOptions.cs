@@ -15,6 +15,6 @@
         /// <summary>
         /// The logger to use.
         /// </summary>
-        IExecutionResultsWriter ResultsWriter { get; set; }
+        IExecutionResultsFormatter ResultsFormatter { get; set; }
     }
 }

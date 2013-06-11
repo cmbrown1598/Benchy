@@ -1,6 +1,8 @@
-﻿namespace Benchy
+﻿using System;
+
+namespace Benchy
 {
-    public interface ILogger
+    public interface ILogger : IDisposable
     {
         void WriteEntry(string text, LogLevel level);
     }

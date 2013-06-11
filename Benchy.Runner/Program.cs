@@ -9,6 +9,7 @@ namespace Benchy.Runner
             // Options and filepaths of assemblies to load.
             var parser = new CommandArgumentParser();
             var options = parser.Parse(args);
+            options.Logger = new FileLogger(@"C:\Logfile.txt", LogLevel.Full);
             using (var engine = new Engine(options))
             {
                 engine.Execute();
