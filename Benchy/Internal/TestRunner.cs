@@ -111,33 +111,37 @@ namespace Benchy.Internal
                     resultStatus = ResultStatus.Failed;
                 }
 
-                SetStatus(result, resultStatus, test);
+                SetStatus(result, resultStatus, test.Warn, test.Fail);
 
                 
                 yield return result;
             }
         }
 
-        private static void SetStatus(ExecutionResults result, ResultStatus resultStatus, HostedBenchmarkTest test)
+        private static void SetStatus(ExecutionResults result, ResultStatus resultStatus, TimeSpan warnTime, TimeSpan failTime)
         {
+            var status = new Dictionary<ResultStatus, string>
+                {
+                    {
+                        ResultStatus.Indeterminate, 
+                        "UNKNOWN: Could not determine results."
+                    },                    {
+                        ResultStatus.Success, 
+                        "SUCCESS: Test succeeded."
+                    },
+                    {
+                        ResultStatus.Warning,
+                        string.Format("WARNING: Maximum execution time was: {0}, past the warning time {1}", result.LongestTime, warnTime)
+                    },
+                    {
+                        ResultStatus.Success,
+                        string.Format("FAILED: Maximum execution time was: {0}, past the failure time {1}", result.LongestTime, failTime)
+                    }
+                };
+
+
             result.ResultStatus = resultStatus;
-
-            if (result.ResultStatus == ResultStatus.Success)
-            {
-                result.ResultText = "SUCCESS: Test succeeded.";
-            }
-
-            if (result.ResultStatus == ResultStatus.Warning)
-            {
-                result.ResultText = string.Format("WARNING: Maximum execution time was: {0}, past the warning time {1}",
-                                                  result.LongestTime, test.Warn);
-            }
-
-            if (result.ResultStatus == ResultStatus.Failed)
-            {
-                result.ResultText = string.Format("FAILED: Maximum execution time was: {0}, past the failure time {1}",
-                                                  result.LongestTime, test.Fail);
-            }
+            result.ResultText = status[resultStatus];
         }
 
         public void Dispose()
