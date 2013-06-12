@@ -4,21 +4,27 @@ using System.Reflection;
 
 namespace Benchy.Internal
 {
-    static class AssemblyLoader
+    internal class AssemblyLoader : IAssemblyLoader
     {
+        private readonly ITestBuilder _testBuilder;
+
+        public AssemblyLoader(ITestBuilder testBuilder)
+        {
+            _testBuilder = testBuilder;
+        }
+
+
         /// <summary>
         /// Given file paths to assemblies, it returns a set of BenchmarkTests.
         /// </summary>
-        /// <param name="logger">The logger.</param>
         /// <param name="filePaths">The files to attempt to load.</param>
         /// <returns></returns>
-        public static IEnumerable<IBenchmarkTest> LoadTests(ILogger logger, params string[] filePaths)
+        public IEnumerable<IBenchmarkTest> LoadTests(params string[] filePaths)
         {
-            var builder = new TestBuilder();
             var tests = new List<IBenchmarkTest>();
             foreach (var assembly in filePaths.Select(Assembly.LoadFrom))
             {
-                tests.AddRange(builder.BuildTests(assembly, logger));
+                tests.AddRange(_testBuilder.BuildTests(assembly));
             }
             return tests;
         }

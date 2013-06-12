@@ -6,9 +6,16 @@ using Benchy.Attributes;
 
 namespace Benchy.Internal
 {
-    class TestBuilder
+    class TestBuilder : ITestBuilder
     {
-        public IEnumerable<ExternalBenchmarkTest> BuildTests(Assembly assembly, ILogger logger)
+        private readonly ILogger _logger;
+
+        public TestBuilder(ILogger logger)
+        {
+            _logger = logger;
+        }
+
+        public IEnumerable<ExternalBenchmarkTest> BuildTests(Assembly assembly)
         {
             var list = new List<ExternalBenchmarkTest>();
             try
@@ -29,14 +36,14 @@ namespace Benchy.Internal
                     }
                     catch
                     {
-                        logger.WriteEntry(string.Format("Could not create instance of type '{0}'", type.Name)
+                        _logger.WriteEntry(string.Format("Could not create instance of type '{0}'", type.Name)
                             , LogLevel.FixtureSetup);
                         continue;
                     }
 
-                    var setupMethods = GetValidMethods<SetupAttribute>(type, logger, typeof(TeardownAttribute), typeof(BenchmarkAttribute)).ToArray();
-                    var teardownMethods = GetValidMethods<TeardownAttribute>(type, logger, typeof(SetupAttribute), typeof(BenchmarkAttribute)).ToArray();
-                    var benchmarkMethods = GetValidMethods<BenchmarkAttribute>(type, logger, typeof(SetupAttribute), typeof(TeardownAttribute)).ToArray();
+                    var setupMethods = GetValidMethods<SetupAttribute>(type, typeof(TeardownAttribute), typeof(BenchmarkAttribute)).ToArray();
+                    var teardownMethods = GetValidMethods<TeardownAttribute>(type, typeof(SetupAttribute), typeof(BenchmarkAttribute)).ToArray();
+                    var benchmarkMethods = GetValidMethods<BenchmarkAttribute>(type, typeof(SetupAttribute), typeof(TeardownAttribute)).ToArray();
 
                     for (var index = 0; index < benchmarkMethods.Length; index++)
                     {
@@ -68,29 +75,29 @@ namespace Benchy.Internal
             }
             catch (ReflectionTypeLoadException)
             {
-                logger.WriteEntry(string.Format("Could not get types from assembly {0}.", assembly.FullName)
+                _logger.WriteEntry(string.Format("Could not get types from assembly {0}.", assembly.FullName)
                         , LogLevel.FixtureSetup);
                 
             }
             return list;
         }
 
-        private static IEnumerable<MethodInfo> GetValidMethods<T>(Type type, ILogger logger, params Type[] invalidAttributes) where T : Attribute, IBenchyAttribute
+        private IEnumerable<MethodInfo> GetValidMethods<T>(Type type, params Type[] invalidAttributes) where T : Attribute, IBenchyAttribute
         {
             var methods = type.GetMethods().Where(m => m.GetCustomAttributes<T>().Any());
 
             return (from method in methods 
                     let ignore = method.GetCustomAttributes()
                                             .Aggregate(false, (current, attribute) => current || invalidAttributes.Contains(attribute.GetType()))
-                    where !ignore && MethodIsValid<T>(method, logger)
+                    where !ignore && MethodIsValid<T>(method)
                     select method).ToList();
         }
 
-        private static bool MethodIsValid<T>(MethodBase methodInfo, ILogger logger)
+        private bool MethodIsValid<T>(MethodBase methodInfo)
         {
             if (methodInfo.GetParameters().Any(t => t.IsOut))
             {
-                logger.WriteEntry(string.Format("{0} is an invalid {1} method. Method cannot have out parameters.", methodInfo.Name, typeof(T).Name)   
+                _logger.WriteEntry(string.Format("{0} is an invalid {1} method. Method cannot have out parameters.", methodInfo.Name, typeof(T).Name)   
                                     , LogLevel.FixtureSetup);
                 return false;
             }

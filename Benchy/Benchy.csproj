@@ -38,7 +38,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>Mojoshouse.pfx</AssemblyOriginatorKeyFile>
@@ -65,9 +65,14 @@
     <Compile Include="Internal\AssemblyLoader.cs" />
     <Compile Include="Internal\DataBreakout.cs" />
     <Compile Include="Internal\ExecutionExceptionInformation.cs" />
+    <Compile Include="Internal\ExecutionOptionsValidator.cs" />
     <Compile Include="Internal\ExternalBenchmarkTest.cs" />
     <Compile Include="Internal\HostedBenchmarkTest.cs" />
+    <Compile Include="Internal\IAssemblyLoader.cs" />
     <Compile Include="Internal\IBenchmarkTest.cs" />
+    <Compile Include="Internal\IExecutionOptionsValidator.cs" />
+    <Compile Include="Internal\ITestBuilder.cs" />
+    <Compile Include="Internal\ITestRunner.cs" />
     <Compile Include="Internal\TestBuilder.cs" />
     <Compile Include="Internal\TestPass.cs" />
     <Compile Include="Internal\ExecutionResults.cs" />

@@ -10,7 +10,8 @@ namespace Benchy
     public sealed class Engine : IDisposable
     {
         private IExecutionOptions _options;
-
+        private IExecutionOptionsValidator _validator = new ExecutionOptionsValidator();
+        
         /// <summary>
         /// Engine distructor.
         /// </summary>
@@ -29,9 +30,13 @@ namespace Benchy
         /// <returns>An enumerable list <see cref="Benchy.IExecutionResults"/> for each executed test.</returns>
         public IEnumerable<IExecutionResults> Execute()
         {
-            var tests = AssemblyLoader.LoadTests(_options.Logger, _options.Files);
+            _validator.Validate(_options);
+
+            var builder = new TestBuilder(_options.Logger);
+            var loader = new AssemblyLoader(builder);
             var runner = new TestRunner(_options.Logger, _options.ResultsFormatter);
 
+            var tests = loader.LoadTests(_options.Files);
             return runner.ExecuteTests(tests);
         }
 
@@ -41,6 +46,7 @@ namespace Benchy
         public void Dispose()
         {
             _options = null;
+            _validator = null;
         }
     }
 }

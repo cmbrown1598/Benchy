@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Benchy.Internal
 {
-    sealed class TestRunner : IDisposable
+    sealed class TestRunner : ITestRunner
     {
         private ILogger _logger;
         private IExecutionResultsFormatter _formatter;
