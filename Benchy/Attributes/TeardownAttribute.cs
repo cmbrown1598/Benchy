@@ -1,6 +1,8 @@
 ﻿using System;
 
+// ReSharper disable CheckNamespace
 namespace Benchy
+// ReSharper restore CheckNamespace
 {
     /// <summary>
     /// Attribute indicating the method that gets called after every BenchMark method in the fixture.

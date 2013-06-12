@@ -1,6 +1,8 @@
 ﻿using System;
 
+// ReSharper disable CheckNamespace
 namespace Benchy
+// ReSharper restore CheckNamespace
 {
     /// <summary>
     /// Indicates the method that should run before every BenchMark method in the fixture.

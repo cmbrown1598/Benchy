@@ -1,6 +1,8 @@
 ﻿using System;
 
+// ReSharper disable CheckNamespace
 namespace Benchy
+// ReSharper restore CheckNamespace
 {
     /// <summary>
     /// Attribute that indicates a method is a benchmark test method.

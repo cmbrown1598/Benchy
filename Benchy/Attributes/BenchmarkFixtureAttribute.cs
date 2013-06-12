@@ -1,6 +1,8 @@
 ﻿using System;
 
+// ReSharper disable CheckNamespace
 namespace Benchy
+// ReSharper restore CheckNamespace
 {
     /// <summary>
     /// Indicates that the decorated class is a benchmark class
