@@ -13,7 +13,7 @@ namespace Benchy
         /// </summary>
         public object[] Parameters { get; set; }
 
-        private ushort _executionCount = 1;
+        private ushort _executionCount = 10;
 
         /// <summary>
         /// Default attribute constructor.
