@@ -1,4 +1,5 @@
 ﻿using System;
+using Benchy.Attributes;
 
 // ReSharper disable CheckNamespace
 namespace Benchy
@@ -8,7 +9,7 @@ namespace Benchy
     /// Attribute that indicates a method is a benchmark test method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class BenchmarkAttribute : Attribute
+    public class BenchmarkAttribute : Attribute, IBenchyAttribute
     {
         /// <summary>
         /// Parameters to pass to the attrubted method.

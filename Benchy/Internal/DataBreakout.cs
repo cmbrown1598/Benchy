@@ -17,6 +17,11 @@ namespace Benchy.Internal
 
         public static IDataBreakout[] GetBreakouts(TimeSpan[] input)
         {
+            if (input.Length == 0)
+            {
+                return new IDataBreakout[0];
+            }
+
             var min = input.Min(m => m.Ticks);
             var max = input.Max(m => m.Ticks);
             var countOfBreakouts = Math.Min((input.Count() / 5), 8);

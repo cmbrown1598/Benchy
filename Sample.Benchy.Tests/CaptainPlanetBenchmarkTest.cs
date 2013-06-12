@@ -6,10 +6,10 @@ namespace Sample.Benchy.Tests
     [BenchmarkFixture(Category = "Superheros")]
     public class CaptainPlanetBenchmarkTest
     {
-        [Setup]
-        public void Setup()
+        [Setup(100)]
+        public void Setup(int value)
         {
-            Console.WriteLine("This sets up nothing.");
+            Console.WriteLine("This sets up nothing." + value);
         }
 
         [Benchmark(10000, ExecutionCount = 20, WarningTimeInMilliseconds = 20, FailureTimeInMilliseconds = 30)]
@@ -22,10 +22,11 @@ namespace Sample.Benchy.Tests
                 j = j * i;
             }
         }
-        [Teardown]
-        public void Teardown()
+
+        [Teardown(1000)]
+        public void Teardown(int value)
         {
-            Console.WriteLine("This tears down nothing.");
+            Console.WriteLine("This tears down nothing." + value);
         }
     }
 }

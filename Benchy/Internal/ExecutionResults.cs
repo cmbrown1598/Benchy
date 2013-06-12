@@ -4,8 +4,6 @@ using System.Linq;
 
 namespace Benchy.Internal
 {
-    // TODO: Make category aware.
-
     class ExecutionResults : IExecutionResults
     {
         private readonly List<ITestPass> _testPasses = new List<ITestPass>();

@@ -134,7 +134,7 @@ namespace Benchy.Internal
                         string.Format("WARNING: Maximum execution time was: {0}, past the warning time {1}", result.LongestTime, warnTime)
                     },
                     {
-                        ResultStatus.Success,
+                        ResultStatus.Failed,
                         string.Format("FAILED: Maximum execution time was: {0}, past the failure time {1}", result.LongestTime, failTime)
                     }
                 };
