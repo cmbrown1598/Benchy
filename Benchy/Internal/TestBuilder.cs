@@ -88,6 +88,8 @@ namespace Benchy.Internal
                 {
                     foreach (var method in methods)
                     {
+
+
                         method.Invoke(typeInstance, null);
                     }
                 };

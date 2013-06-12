@@ -1,5 +1,8 @@
 ﻿namespace Benchy
 {
+    /// <summary>
+    /// An interface representing Engine options.
+    /// </summary>
     public interface IExecutionOptions
     {
         /// <summary>
@@ -13,7 +16,7 @@
         ILogger Logger { get; set; }
 
         /// <summary>
-        /// The logger to use.
+        /// The formatter of results to use.
         /// </summary>
         IExecutionResultsFormatter ResultsFormatter { get; set; }
     }

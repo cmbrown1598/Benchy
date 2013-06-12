@@ -8,14 +8,24 @@ namespace Benchy
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class BenchmarkAttribute : Attribute
     {
+        /// <summary>
+        /// Parameters to pass to the attrubted method.
+        /// </summary>
         public object[] Parameters { get; set; }
 
         private ushort _executionCount = 1;
 
+        /// <summary>
+        /// Default attribute constructor.
+        /// </summary>
         public BenchmarkAttribute()
         {
         }
 
+        /// <summary>
+        /// Attribute constructor.
+        /// </summary>
+        /// <param name="parameters">Parameters to pass to the attrubted method.</param>
         public BenchmarkAttribute(params object[] parameters)
         {
             Parameters = parameters;

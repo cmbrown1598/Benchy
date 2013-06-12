@@ -69,6 +69,7 @@
     <Compile Include="ExecutionOptions.cs" />
     <Compile Include="ExecutionResultsFormatter.cs" />
     <Compile Include="FileLogger.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

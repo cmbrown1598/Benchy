@@ -1,5 +1,8 @@
 namespace Benchy
 {
+    /// <summary>
+    /// Exception information during test execution.
+    /// </summary>
     public interface IExecutionExceptionInformation
     {
         /// <summary>
