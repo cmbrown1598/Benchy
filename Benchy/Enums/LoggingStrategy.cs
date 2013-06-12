@@ -1,6 +1,8 @@
 ﻿using System;
 
+// ReSharper disable CheckNamespace
 namespace Benchy
+// ReSharper restore CheckNamespace
 {
     /// <summary>
     /// The level of detail to log to.

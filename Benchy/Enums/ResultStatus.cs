@@ -1,4 +1,6 @@
-﻿namespace Benchy
+﻿// ReSharper disable CheckNamespace
+namespace Benchy
+// ReSharper restore CheckNamespace
 {
     /// <summary>
     /// Status of a test execution.
