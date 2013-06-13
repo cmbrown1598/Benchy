@@ -112,9 +112,11 @@ namespace Sample.Benchy.Tests
         public void Execute(long maxValue)
         {
             var j = 0;
-            for (var i = 0; i < maxValue; i++)
+            var i = 0; 
+            while(i != maxValue)
             {
                 j = j * i;
+                i++;
             }
         }
 
