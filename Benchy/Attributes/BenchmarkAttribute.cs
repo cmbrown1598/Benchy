@@ -16,7 +16,7 @@ namespace Benchy
         /// </summary>
         public object[] Parameters { get; set; }
 
-        private ushort _executionCount = 10;
+        private uint _executionCount = 10;
 
         /// <summary>
         /// Default attribute constructor.
@@ -26,7 +26,7 @@ namespace Benchy
         }
 
         /// <summary>
-        /// Attribute constructor.
+        /// Attribute constructor.the
         /// </summary>
         /// <param name="parameters">Parameters to pass to the attrubted method.</param>
         public BenchmarkAttribute(params object[] parameters)
@@ -37,7 +37,7 @@ namespace Benchy
         /// <summary>
         /// Number of times the test should execute.
         /// </summary>
-        public ushort ExecutionCount
+        public uint ExecutionCount
         {
             get { return _executionCount; }
             set { _executionCount = value; }

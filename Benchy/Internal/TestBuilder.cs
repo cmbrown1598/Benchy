@@ -56,9 +56,9 @@ namespace Benchy.Internal
                             list.Add(new ExternalBenchmarkTest
                                 {
                                     Category = benchmarkFixtureAttr.Category,
-                                    SetupAction = CreateAction<SetupAttribute>(setupMethods, obj),
+                                    SetupAction = CreateAction<SetupAttribute>(setupMethods, obj, ExecutionScope.OncePerMethod),
                                     ExecuteAction = () => benchmarkMethod.Invoke(obj, att.Parameters),
-                                    TeardownAction = CreateAction<TeardownAttribute>(teardownMethods, obj),
+                                    TeardownAction = CreateAction<TeardownAttribute>(teardownMethods, obj, ExecutionScope.OncePerMethod),
                                     ExecutionCount = att.ExecutionCount,
                                     TypeName = obj.GetType().Name,
                                     Name = benchmarkMethod.Name + " #" + (i + 1),
@@ -104,13 +104,13 @@ namespace Benchy.Internal
             return true;
         }
 
-        private static Action CreateAction<T>(IEnumerable<MethodInfo> methods, object typeInstance) where T : Attribute, IBenchyAttribute 
+        private static Action CreateAction<T>(IEnumerable<MethodInfo> methods, object typeInstance, ExecutionScope scope) where T : Attribute, IBenchyAttribute, IScopedAttribute
         {
             return () =>
                 {
                     foreach (var method in methods)
                     {
-                        var attribute = method.GetCustomAttributes<T>().First();
+                        var attribute = method.GetCustomAttributes<T>().First(m => m.ExecutionScope == scope);
                         method.Invoke(typeInstance, attribute.Parameters);
                     }
                 };
