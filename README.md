@@ -47,8 +47,8 @@ Notes about Benchy-attributed classes and methods.
 2. Benchmark, Setup, and Teardown all can take parameters, by simply passing them in to the attribute (see examples below.)  Note: Benchy can't support out or ref parameters.
 3. You can place multiple benchmark attributes on a given method, and combined with the above, allow for reuse.
 
-Examples
---------
+A Few Examples
+--------------
 A simple example of a Benchy Attributed class.
 
 <pre>
@@ -129,4 +129,7 @@ namespace Sample.Benchy.Tests
 }
 </pre>
 
+Getting more info
+-----------------
 
+I promise I'll write a bit more documentation once I get the Benchy.Runner a bit more functional.
