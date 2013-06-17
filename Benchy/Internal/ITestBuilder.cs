@@ -5,6 +5,6 @@ namespace Benchy.Internal
 {
     internal interface ITestBuilder
     {
-        IEnumerable<ExternalBenchmarkTest> BuildTests(Assembly assembly);
+        IEnumerable<IFixture> BuildTests(Assembly assembly);
     }
 }

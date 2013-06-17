@@ -15,9 +15,9 @@ namespace Benchy.Internal
             _logger = logger;
         }
 
-        public IEnumerable<ExternalBenchmarkTest> BuildTests(Assembly assembly)
+        public IEnumerable<IFixture> BuildTests(Assembly assembly)
         {
-            var list = new List<ExternalBenchmarkTest>();
+            var list = new List<IFixture>();
             try
             {
                 var types = assembly.GetTypes().Where(type => type.GetCustomAttributes(typeof(BenchmarkFixtureAttribute), true).Length > 0);
@@ -41,24 +41,37 @@ namespace Benchy.Internal
                         continue;
                     }
 
+
+                    
                     var setupMethods = GetValidMethods<SetupAttribute>(type, typeof(TeardownAttribute), typeof(BenchmarkAttribute)).ToArray();
                     var teardownMethods = GetValidMethods<TeardownAttribute>(type, typeof(SetupAttribute), typeof(BenchmarkAttribute)).ToArray();
                     var benchmarkMethods = GetValidMethods<BenchmarkAttribute>(type, typeof(SetupAttribute), typeof(TeardownAttribute)).ToArray();
+
+                    var fixture = new ExternalBenchmarkFixture(_logger)
+                        {
+                            SetupAction = CreateAction<SetupAttribute>(setupMethods, obj, ExecutionScope.OncePerFixture),
+                            TeardownAction = CreateAction<TeardownAttribute>(teardownMethods, obj, ExecutionScope.OncePerFixture)
+                        };
 
                     for (var index = 0; index < benchmarkMethods.Length; index++)
                     {
                         var benchmarkMethod = benchmarkMethods[index];
                         var benchmarkAttributes = benchmarkMethod.GetCustomAttributes<BenchmarkAttribute>().ToArray();
-
+                        var benchmarkList = new List<IBenchmarkTest>();
                         for (var i = 0; i < benchmarkAttributes.Count(); i++)
                         {
                             var att = benchmarkAttributes[i];
-                            list.Add(new ExternalBenchmarkTest
+
+                            benchmarkList.Add(new ExternalBenchmarkTest
                                 {
                                     Category = benchmarkFixtureAttr.Category,
+                                    PerPassSetupAction = CreateAction<SetupAttribute>(setupMethods, obj, ExecutionScope.OncePerPass),
                                     SetupAction = CreateAction<SetupAttribute>(setupMethods, obj, ExecutionScope.OncePerMethod),
+                                    
                                     ExecuteAction = () => benchmarkMethod.Invoke(obj, att.Parameters),
+
                                     TeardownAction = CreateAction<TeardownAttribute>(teardownMethods, obj, ExecutionScope.OncePerMethod),
+                                    PerPassTeardownAction = CreateAction<TeardownAttribute>(teardownMethods, obj, ExecutionScope.OncePerPass),
                                     ExecutionCount = att.ExecutionCount,
                                     TypeName = obj.GetType().Name,
                                     Name = benchmarkMethod.Name + " #" + (i + 1),
@@ -70,6 +83,11 @@ namespace Benchy.Internal
                                                     att.WarningTimeInSeconds)
                                 });
                         }
+                        fixture.BenchmarkTests = benchmarkList;
+                    }
+                    if (fixture.BenchmarkTests.Any())
+                    {
+                        list.Add(fixture);
                     }
                 }
             }
@@ -106,14 +124,25 @@ namespace Benchy.Internal
 
         private static Action CreateAction<T>(IEnumerable<MethodInfo> methods, object typeInstance, ExecutionScope scope) where T : Attribute, IBenchyAttribute, IScopedAttribute
         {
-            return () =>
+            var ms = methods.ToArray();
+
+            if (ms.Any(m => m.GetCustomAttributes<T>().Any(a => a.ExecutionScope == scope)))
+            {
+                return () =>
                 {
-                    foreach (var method in methods)
+                    foreach (var method in ms)
                     {
-                        var attribute = method.GetCustomAttributes<T>().First(m => m.ExecutionScope == scope);
-                        method.Invoke(typeInstance, attribute.Parameters);
+                        var attribute = method.GetCustomAttributes<T>().FirstOrDefault(m => m.ExecutionScope == scope);
+                        if (attribute != null)
+                        {
+                            method.Invoke(typeInstance, attribute.Parameters);
+                        }
                     }
                 };
+            }
+            return null;
+
+
         }
         
         public static TimeSpan? GetTimespan(long ticks, long milliseconds, long seconds)

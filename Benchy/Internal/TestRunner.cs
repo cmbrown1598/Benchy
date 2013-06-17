@@ -20,15 +20,25 @@ namespace Benchy.Internal
         /// </summary>
         /// <param name="tests"></param>
         /// <returns></returns>
-        public IExecutionResults[] ExecuteTests(IEnumerable<IBenchmarkTest> tests)
+        public IExecutionResults[] ExecuteTests(IEnumerable<IFixture> testFixtures)
         {
             _logger.WriteEntry(String.Format("Test runner starting. {0}", DateTime.Now), LogLevel.Setup);
 
             var list = new List<IExecutionResults>();
-            foreach (var performanceTestPass in PerformTests(tests))
+            foreach (var fixture in testFixtures)
             {
-                _logger.WriteEntry(_formatter.FormatResult(performanceTestPass), LogLevel.Results);
-                list.Add(performanceTestPass);
+               
+                fixture.Setup();
+               
+
+                foreach (var performanceTestPass in PerformTests(fixture.BenchmarkTests))
+                {
+                    _logger.WriteEntry(_formatter.FormatResult(performanceTestPass), LogLevel.Results);
+                    list.Add(performanceTestPass);
+                }
+
+               
+                fixture.Teardown();
             }
             _logger.WriteEntry(String.Format("Test runner complete. {0}", DateTime.Now), LogLevel.Setup);
 
@@ -62,7 +72,11 @@ namespace Benchy.Internal
 
                         _logger.WriteEntry(testPassName + " Start", LogLevel.Execution);
 
+                        test.PerPassSetup();
+
                         test.Execute();
+
+                        test.PerPassTeardown();
 
                         var testPass = new TestPass { 
                             TestName = testPassName, 

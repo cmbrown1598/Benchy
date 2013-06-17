@@ -6,7 +6,11 @@
     public enum ExecutionScope
     {
         /// <summary>
-        /// The method will run for each benchmark test in the fixture.
+        /// The method will run once for each benchmark test pass.
+        /// </summary>
+        OncePerPass,
+        /// <summary>
+        /// The method will run once for each benchmark test in the fixture.
         /// </summary>
         OncePerMethod,
         /// <summary>

@@ -10,6 +10,6 @@ namespace Benchy.Internal
         /// </summary>
         /// <param name="tests"></param>
         /// <returns></returns>
-        IExecutionResults[] ExecuteTests(IEnumerable<IBenchmarkTest> tests);
+        IExecutionResults[] ExecuteTests(IEnumerable<IFixture> tests);
     }
 }

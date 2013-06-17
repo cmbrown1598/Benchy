@@ -65,6 +65,7 @@
     <Compile Include="IExecutionResultsFormatter.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="Internal\AssemblyLoader.cs" />
+    <Compile Include="Internal\ExternalBenchmarkFixture.cs" />
     <Compile Include="Internal\DataBreakout.cs" />
     <Compile Include="Internal\ExecutionExceptionInformation.cs" />
     <Compile Include="Internal\ExecutionOptionsValidator.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Internal\IAssemblyLoader.cs" />
     <Compile Include="Internal\IBenchmarkTest.cs" />
     <Compile Include="Internal\IExecutionOptionsValidator.cs" />
+    <Compile Include="Internal\IFixture.cs" />
     <Compile Include="Internal\ITestBuilder.cs" />
     <Compile Include="Internal\ITestRunner.cs" />
     <Compile Include="Internal\TestBuilder.cs" />

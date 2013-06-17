@@ -52,13 +52,44 @@ namespace Benchy.Internal
             get { return _hostedTest.Name; }
         }
 
+        public void PerPassSetup()
+        {
+            try
+            {
+                if (!_hostedTest.HasSetup(ExecutionScope.OncePerPass)) return;
+                _logger.WriteEntry("PER PASS SETUP START", LogLevel.Setup);
+                _hostedTest.PerPassSetup();
+                _logger.WriteEntry("PER PASS SETUP COMPLETE", LogLevel.Setup);
+            }
+            catch (Exception e)
+            {
+                throw new SetupException(e);
+            }
+        }
+
+        public void PerPassTeardown()
+        {
+            try
+            {
+                if (!_hostedTest.HasTeardown(ExecutionScope.OncePerPass)) return;
+                _logger.WriteEntry("PER PASS TEARDOWN START", LogLevel.Teardown);
+                _hostedTest.PerPassTeardown();
+                _logger.WriteEntry("PER PASS TEARDOWN COMPLETE", LogLevel.Teardown);
+            }
+            catch (Exception e)
+            {
+                throw new TeardownException(e);
+            }
+        }
+
         public void Setup()
         {
             try
             {
-                _logger.WriteEntry("SETUP START", LogLevel.Setup);
+                if (!_hostedTest.HasSetup(ExecutionScope.OncePerMethod)) return;
+                _logger.WriteEntry("PER METHOD SETUP START", LogLevel.Setup);
                 _hostedTest.Setup();
-                _logger.WriteEntry("SETUP COMPLETE", LogLevel.Setup);
+                _logger.WriteEntry("PER METHOD SETUP COMPLETE", LogLevel.Setup);
             }
             catch (Exception e)
             {
@@ -70,9 +101,10 @@ namespace Benchy.Internal
         {
             try
             {
-                _logger.WriteEntry("TEARDOWN START", LogLevel.Teardown);
+                if (!_hostedTest.HasTeardown(ExecutionScope.OncePerMethod)) return;
+                _logger.WriteEntry("PER METHOD TEARDOWN START", LogLevel.Teardown);
                 _hostedTest.Teardown();
-                _logger.WriteEntry("TEARDOWN COMPLETE", LogLevel.Teardown);
+                _logger.WriteEntry("PER METHOD TEARDOWN COMPLETE", LogLevel.Teardown);
             }
             catch (Exception e)
             {

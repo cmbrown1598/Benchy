@@ -19,9 +19,9 @@ namespace Benchy.Internal
         /// </summary>
         /// <param name="filePaths">The files to attempt to load.</param>
         /// <returns></returns>
-        public IEnumerable<IBenchmarkTest> LoadTests(params string[] filePaths)
+        public IEnumerable<IFixture> LoadTests(params string[] filePaths)
         {
-            var tests = new List<IBenchmarkTest>();
+            var tests = new List<IFixture>();
             foreach (var assembly in filePaths.Select(Assembly.LoadFrom))
             {
                 tests.AddRange(_testBuilder.BuildTests(assembly));

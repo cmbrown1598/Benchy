@@ -9,6 +9,6 @@ namespace Benchy.Internal
         /// </summary>
         /// <param name="filePaths">The files to attempt to load.</param>
         /// <returns></returns>
-        IEnumerable<IBenchmarkTest> LoadTests(params string[] filePaths);
+        IEnumerable<IFixture> LoadTests(params string[] filePaths);
     }
 }

@@ -13,8 +13,13 @@ namespace Benchy.Internal
         string TypeName { get; }
         string Category { get; }
 
+        bool HasSetup(ExecutionScope scope);
+        bool HasTeardown(ExecutionScope scope);
+
         void Setup();
         void Execute();
         void Teardown();
+        void PerPassSetup();
+        void PerPassTeardown();
     }
 }

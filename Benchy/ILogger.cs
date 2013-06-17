@@ -5,7 +5,7 @@ namespace Benchy
     /// <summary>
     /// Interface that defines a logger
     /// </summary>
-    public interface ILogger : IDisposable
+    public interface ILogger
     {
         /// <summary>
         /// Writes to the log.

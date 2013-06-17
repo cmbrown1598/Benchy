@@ -6,16 +6,29 @@ namespace Sample.Benchy.Tests
     [BenchmarkFixture(Category = "Superheros")]
     public class CaptainPlanetBenchmarkTest
     {
-        [Setup(100)]
-        public void Setup(int value)
+        [Setup(ExecutionScope = ExecutionScope.OncePerFixture)]
+        public void SetupAllTestRuns()
         {
-            Console.WriteLine("This sets up nothing." + value);
+            Console.WriteLine("This is fixture level.");
         }
 
-        [Benchmark(10000, ExecutionCount = 20, WarningTimeInMilliseconds = 20, FailureTimeInMilliseconds = 30)]
-        [Benchmark(20000, ExecutionCount = 20, WarningTimeInMilliseconds = 20, FailureTimeInMilliseconds = 30)]
-        public void Execute(long maxValue)
+        [Setup(ExecutionScope = ExecutionScope.OncePerMethod)]
+        public void SetupEachTestRun()
         {
+            Console.WriteLine("This executes once per Benchmark.");
+        }
+
+        [Setup(ExecutionScope = ExecutionScope.OncePerPass)]
+        public void Setup()
+        {
+            Console.WriteLine("This executes once per test pass.");
+        }
+
+        [Benchmark(ExecutionCount = 20, WarningTimeInMilliseconds = 20, FailureTimeInMilliseconds = 30)]
+        [Benchmark(ExecutionCount = 20, WarningTimeInMilliseconds = 20, FailureTimeInMilliseconds = 30)]
+        public void Execute()
+        {
+            const int maxValue = 2500000;
             var j = 0;
             for (var i = 0; i < maxValue; i++)
             {
@@ -23,10 +36,5 @@ namespace Sample.Benchy.Tests
             }
         }
 
-        [Teardown(1000)]
-        public void Teardown(int value)
-        {
-            Console.WriteLine("This tears down nothing." + value);
-        }
     }
 }

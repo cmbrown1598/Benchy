@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using Benchy.Internal;
 
 namespace Benchy
@@ -20,7 +22,7 @@ namespace Benchy
         public Engine(IExecutionOptions options)
         {
             if (options == null) throw new ArgumentNullException("options");
-
+            
             _options = options;
         }
 
@@ -35,9 +37,11 @@ namespace Benchy
             var builder = new TestBuilder(_options.Logger);
             var loader = new AssemblyLoader(builder);
             var runner = new TestRunner(_options.Logger, _options.ResultsFormatter);
-
+           
             var tests = loader.LoadTests(_options.Files);
-            return runner.ExecuteTests(tests);
+            var results = runner.ExecuteTests(tests);
+           
+            return results;
         }
 
         /// <summary>
@@ -48,5 +52,6 @@ namespace Benchy
             _options = null;
             _validator = null;
         }
+
     }
 }

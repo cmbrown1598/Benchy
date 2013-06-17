@@ -5,7 +5,7 @@ namespace Benchy.Runner
     /// <summary>
     /// An abstract logger implementation.
     /// </summary>
-    public abstract class Logger : ILogger
+    public abstract class Logger : ILogger, IDisposable
     {
         private readonly LogLevel _loggingStrategy;
 
