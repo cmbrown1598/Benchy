@@ -83,7 +83,7 @@
     <Compile Include="Internal\TestRunner.cs" />
     <Compile Include="ITestPass.cs" />
     <Compile Include="ITestResults.cs" />
-    <Compile Include="Enums\LoggingStrategy.cs" />
+    <Compile Include="Enums\LogLevel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Enums\ResultStatus.cs" />
     <Compile Include="Attributes\SetupAttribute.cs" />

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Benchy.Runner
 {
@@ -7,16 +9,29 @@ namespace Benchy.Runner
         static int Main(string[] args)
         {
             // Options and filepaths of assemblies to load.
-            var parser = new CommandArgumentParser();
-            var options = parser.Parse(args);
-            options.Logger = new FileLogger(@"C:\Logfile.txt", LogLevel.Full);
-            using (var engine = new Engine(options))
+            var retValue = 0;
+            var options = CommandLineOptions.GetCommandLineOptions(args);
+            IEnumerable<IExecutionResults> results = null;
+            if (options != null)
             {
-                engine.Execute();
+                using (var engine = new Engine(options))
+                {
+                    results = engine.Execute();
+                }
+            }
+
+            if (results != null)
+            {
+                retValue = results.Aggregate(retValue, (current, result) => Math.Max(current, (int)result.ResultStatus));
+                Console.WriteLine("Benchmark Runner Test status: {0}", (ResultStatus)retValue);
+            }
+            else
+            {
+                Console.WriteLine("No benchmark tests run.");
             }
             Console.WriteLine("Press any key to continue.");
             Console.ReadLine();
-            return 0;
+            return retValue;
         }
     }
 }

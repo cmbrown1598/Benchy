@@ -10,7 +10,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Mojoshouse Software")]
 [assembly: AssemblyProduct("Benchy.Runner")]
-[assembly: AssemblyCopyright("Copyright © Mojoshouse 2013")]
+[assembly: AssemblyCopyright("Copyright (C) Mojoshouse 2013")]
+[assembly: AssemblyInformationalVersion("1.0")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
