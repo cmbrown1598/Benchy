@@ -52,6 +52,10 @@ namespace Benchy.Internal
             get { return _hostedTest.Name; }
         }
 
+        public bool CollectGarbage {
+            get { return _hostedTest.CollectGarbage; }
+        }
+
         public void PerPassSetup()
         {
             try

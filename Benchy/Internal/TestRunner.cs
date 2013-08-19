@@ -72,6 +72,12 @@ namespace Benchy.Internal
 
                         _logger.WriteEntry(testPassName + " Start", LogLevel.Execution);
 
+                        if (test.CollectGarbage)
+                        {
+                            GC.Collect();
+                            GC.WaitForPendingFinalizers();
+                            GC.Collect();
+                        }
                         test.PerPassSetup();
 
                         test.Execute();

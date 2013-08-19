@@ -17,6 +17,7 @@ namespace Benchy
         public object[] Parameters { get; set; }
 
         private uint _executionCount = 10;
+        private bool _collectGarbage = true;
 
         /// <summary>
         /// Default attribute constructor.
@@ -41,6 +42,15 @@ namespace Benchy
         {
             get { return _executionCount; }
             set { _executionCount = value; }
+        }
+
+        /// <summary>
+        /// Ensures that garbage collection occurs prior to each execution.
+        /// </summary>
+        public bool CollectGarbage
+        {
+            get { return _collectGarbage; }
+            set { _collectGarbage = value; }
         }
 
         /// <summary>

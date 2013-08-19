@@ -12,6 +12,7 @@ namespace Benchy.Internal
         string Name { get; }
         string TypeName { get; }
         string Category { get; }
+        bool CollectGarbage { get; }
 
         bool HasSetup(ExecutionScope scope);
         bool HasTeardown(ExecutionScope scope);

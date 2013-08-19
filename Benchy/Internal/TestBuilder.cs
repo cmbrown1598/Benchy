@@ -65,6 +65,7 @@ namespace Benchy.Internal
                             benchmarkList.Add(new ExternalBenchmarkTest
                                 {
                                     Category = benchmarkFixtureAttr.Category,
+                                    CollectGarbage = att.CollectGarbage,
                                     PerPassSetupAction = CreateAction<SetupAttribute>(setupMethods, obj, ExecutionScope.OncePerPass),
                                     SetupAction = CreateAction<SetupAttribute>(setupMethods, obj, ExecutionScope.OncePerMethod),
                                     
