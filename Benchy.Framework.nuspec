@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>Benchy.Framework</id>
+    <version>1.0.0</version>
+    <title>Benchy.Framework</title>
+    <authors>Christopher Brown</authors>
+    <owners>Christopher Brown</owners>
+    <description>A performance testing framework written in the style of xUnit tests, allowing for coded performance tests and benchmarks.</description>
+    <copyright>Copyright 2013</copyright>
+    <tags>testing benchmark performance</tags>
+  </metadata>
+  <files>
+    <file src="Benchy\bin\Release\*.dll" target="lib"></file>
+  </files>
+</package>

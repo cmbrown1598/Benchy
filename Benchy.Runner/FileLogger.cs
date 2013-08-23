@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Benchy.Framework;
 
 namespace Benchy.Runner
 {

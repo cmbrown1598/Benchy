@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Benchy.Internal;
 
-namespace Benchy
+namespace Benchy.Framework
 {
     /// <summary>
     /// The Benchy Engine, which loads the tests and executes them.
@@ -30,7 +30,7 @@ namespace Benchy
         /// <summary>
         /// Executes the tests.
         /// </summary>
-        /// <returns>An enumerable list <see cref="Benchy.IExecutionResults"/> for each executed test.</returns>
+        /// <returns>An enumerable list <see cref="IExecutionResults"/> for each executed test.</returns>
         public IEnumerable<IExecutionResults> Execute()
         {
             _validator.Validate(_options);

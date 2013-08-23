@@ -1,4 +1,4 @@
-﻿namespace Benchy.Internal
+﻿namespace Benchy.Framework
 {
     internal interface IExecutionOptionsValidator
     {

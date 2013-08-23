@@ -1,4 +1,4 @@
-namespace Benchy
+namespace Benchy.Framework
 {
     /// <summary>
     /// Exception information during test execution.

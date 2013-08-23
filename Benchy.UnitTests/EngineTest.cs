@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using Benchy.Framework;
 using NUnit.Framework;
 using Rhino.Mocks;
 

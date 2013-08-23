@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using Benchy.Internal;
+using Benchy.Framework;
 using NUnit.Framework;
 using Rhino.Mocks;
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Benchy
+namespace Benchy.Framework
 {
     /// <summary>
     /// Interface that defines a logger

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace Benchy.Internal
+namespace Benchy.Framework
 {
     class ExecutionOptionsValidator : IExecutionOptionsValidator
     {

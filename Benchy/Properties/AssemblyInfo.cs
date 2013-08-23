@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Benchy")]
-[assembly: AssemblyDescription("A benchmark testing framework.")]
+[assembly: AssemblyDescription("An application performance testing framework, enabling unit level benchmarking and testing.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("MojosHouse Software")]
 [assembly: AssemblyProduct("Benchy")]
@@ -33,5 +33,5 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: InternalsVisibleTo("Benchy.UnitTests")]
-[assembly: AssemblyVersion("0.1.0.0")]
-[assembly: AssemblyFileVersion("0.1.0.0")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

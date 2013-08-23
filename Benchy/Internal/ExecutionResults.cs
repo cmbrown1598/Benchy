@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Benchy.Internal
+namespace Benchy.Framework
 {
     class ExecutionResults : IExecutionResults
     {

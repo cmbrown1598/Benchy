@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 
-namespace Benchy.Internal
+namespace Benchy.Framework
 {
     internal class HostedBenchmarkTest
     {

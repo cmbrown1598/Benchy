@@ -7,8 +7,8 @@
     <ProjectGuid>{B461F014-B0DC-41BE-9979-472DCF7ADF2A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Benchy</RootNamespace>
-    <AssemblyName>Benchy</AssemblyName>
+    <RootNamespace>Benchy.Framework</RootNamespace>
+    <AssemblyName>Benchy.Framework</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

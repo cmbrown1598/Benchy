@@ -1,5 +1,5 @@
 ﻿using System.Data;
-using Benchy;
+using Benchy.Framework;
 
 namespace Sample.Benchy.Tests
 {

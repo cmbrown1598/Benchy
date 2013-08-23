@@ -1,6 +1,6 @@
 using System;
 
-namespace Benchy.Internal
+namespace Benchy.Framework
 {
     interface IBenchmarkTest
     {

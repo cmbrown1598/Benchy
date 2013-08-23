@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Benchy.Internal
+namespace Benchy.Framework
 {
     interface IFixture
     {

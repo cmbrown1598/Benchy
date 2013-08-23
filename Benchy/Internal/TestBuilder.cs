@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Benchy.Attributes;
 
-namespace Benchy.Internal
+namespace Benchy.Framework
 {
     class TestBuilder : ITestBuilder
     {
@@ -142,8 +141,6 @@ namespace Benchy.Internal
                 };
             }
             return null;
-
-
         }
         
         public static TimeSpan? GetTimespan(long ticks, long milliseconds, long seconds)

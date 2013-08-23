@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Benchy
+namespace Benchy.Framework
 {
     /// <summary>
     /// Representation of an interation over a benchmark test.

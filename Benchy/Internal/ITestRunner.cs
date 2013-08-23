@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Benchy.Internal;
 
-namespace Benchy.Internal
+namespace Benchy.Framework
 {
     internal interface ITestRunner : IDisposable
     {

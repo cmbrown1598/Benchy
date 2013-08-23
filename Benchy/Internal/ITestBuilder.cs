@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Benchy.Internal
+namespace Benchy.Framework
 {
     internal interface ITestBuilder
     {

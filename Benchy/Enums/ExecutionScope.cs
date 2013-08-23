@@ -1,4 +1,4 @@
-﻿namespace Benchy
+﻿namespace Benchy.Framework
 {
     /// <summary>
     /// The scope of the method's execution.

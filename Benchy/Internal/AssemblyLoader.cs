@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Benchy.Internal
+namespace Benchy.Framework
 {
     internal class AssemblyLoader : IAssemblyLoader
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Benchy
+namespace Benchy.Framework
 {
     /// <summary>
     /// The results of a benchmark test run.

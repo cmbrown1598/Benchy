@@ -1,8 +1,7 @@
 ﻿using System;
-using Benchy.Attributes;
 
 // ReSharper disable CheckNamespace
-namespace Benchy
+namespace Benchy.Framework
 // ReSharper restore CheckNamespace
 {
     /// <summary>

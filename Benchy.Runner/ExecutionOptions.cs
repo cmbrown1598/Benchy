@@ -1,3 +1,5 @@
+using Benchy.Framework;
+
 namespace Benchy.Runner
 {
     class ExecutionOptions : IExecutionOptions

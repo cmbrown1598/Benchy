@@ -1,4 +1,4 @@
-﻿namespace Benchy.Attributes
+﻿namespace Benchy.Framework
 {
     internal interface IBenchyAttribute
     {
