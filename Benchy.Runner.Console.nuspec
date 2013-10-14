@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>Benchy.Runner.Console</id>
+    <version>1.0.0</version>
+    <title>Benchy.Runner.Console</title>
+    <authors>Christopher Brown</authors>
+    <owners>Christopher Brown</owners>
+    <description>A basic console app for running Benchy tests.</description>
+    <copyright>Copyright 2013</copyright>
+    <tags>testing benchmark performance</tags>
+  </metadata>
+  <files>
+    <file src="Benchy.Runner\bin\Release\CommandLine.dll" target="lib"></file>
+    <file src="Benchy.Runner\bin\Release\Benchy.Runner.exe" target="lib"></file>
+  </files>
+  <dependencies>
+    <dependency id="Benchy.Framework" version="1.0.0" />
+  </dependencies>
+</package>
