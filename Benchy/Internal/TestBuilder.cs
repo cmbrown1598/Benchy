@@ -52,6 +52,8 @@ namespace Benchy.Framework
                             TeardownAction = CreateAction<TeardownAttribute>(teardownMethods, obj, ExecutionScope.OncePerFixture)
                         };
 
+                    var listOfTests = new List<IBenchmarkTest>();
+
                     for (var index = 0; index < benchmarkMethods.Length; index++)
                     {
                         var benchmarkMethod = benchmarkMethods[index];
@@ -65,6 +67,8 @@ namespace Benchy.Framework
                                 {
                                     Category = benchmarkFixtureAttr.Category,
                                     CollectGarbage = att.CollectGarbage,
+                                    RunInParallel = att.Parallelize,
+
                                     PerPassSetupAction = CreateAction<SetupAttribute>(setupMethods, obj, ExecutionScope.OncePerPass),
                                     SetupAction = CreateAction<SetupAttribute>(setupMethods, obj, ExecutionScope.OncePerMethod),
                                     
@@ -83,12 +87,13 @@ namespace Benchy.Framework
                                                     att.WarningTimeInSeconds)
                                 });
                         }
-                        fixture.BenchmarkTests = benchmarkList;
+
+                        listOfTests.AddRange(benchmarkList);
                     }
-                    if (fixture.BenchmarkTests.Any())
-                    {
-                        list.Add(fixture);
-                    }
+                    if (!listOfTests.Any()) continue;
+                    fixture.BenchmarkTests = listOfTests;
+                    
+                    list.Add(fixture);
                 }
             }
             catch (ReflectionTypeLoadException)

@@ -55,6 +55,11 @@ namespace Benchy.Framework
         public bool CollectGarbage {
             get { return _hostedTest.CollectGarbage; }
         }
+        public bool RunInParallel
+        {
+            get { return _hostedTest.RunInParallel; }
+        }
+
 
         public void PerPassSetup()
         {

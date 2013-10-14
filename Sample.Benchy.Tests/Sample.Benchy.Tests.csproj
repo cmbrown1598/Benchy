@@ -47,6 +47,8 @@
     <Compile Include="CaptainPlanetBenchmarkTest.cs" />
     <Compile Include="ExampleBenchmarkTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SetupExamplesTest.cs" />
+    <Compile Include="TeardownExamplesTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

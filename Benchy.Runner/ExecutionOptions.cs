@@ -24,14 +24,12 @@ namespace Benchy.Runner
         /// </summary>
         /// <param name="files"></param>
         /// <param name="logger"></param>
-        /// <param name="formatter"></param>
         public ExecutionOptions(string[] files, 
-            ILogger logger = null, 
-            IExecutionResultsFormatter formatter = null)
+            ILogger logger = null)
         {
             Files = files;
-            Logger = logger ?? new ConsoleLogger(LogLevel.Results);
-            ResultsFormatter = formatter ?? new ExecutionResultsFormatter();
+            Logger = logger ?? new Logger(LogLevel.Full);
+            ResultsFormatter = new ExecutionResultsFormatter();
         }
     }
 }

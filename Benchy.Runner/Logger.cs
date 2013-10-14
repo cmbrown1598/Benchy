@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Benchy.Framework;
 
 namespace Benchy.Runner
@@ -6,7 +7,7 @@ namespace Benchy.Runner
     /// <summary>
     /// An abstract logger implementation.
     /// </summary>
-    public abstract class Logger : ILogger, IDisposable
+    public sealed class Logger : ILogger
     {
         private readonly LogLevel _loggingStrategy;
 
@@ -14,10 +15,14 @@ namespace Benchy.Runner
         /// Basic constructor.
         /// </summary>
         /// <param name="loggingStrategy">The level(s) to log.</param>
-        protected Logger(LogLevel loggingStrategy)
+        public Logger(LogLevel loggingStrategy)
         {
             _loggingStrategy = loggingStrategy;
+            if (Trace.Listeners.Count == 1 && Trace.Listeners[0].GetType() == (typeof(DefaultTraceListener)))
+                Trace.Listeners.Add(new ConsoleTraceListener());
+
         }
+
 
         /// <summary>
         /// Standard WriteEntry Method.
@@ -29,31 +34,9 @@ namespace Benchy.Runner
         {
             if (_loggingStrategy.HasFlag(level))
             {
-                Write(DateTime.Now.ToString("[HH:mm:ss.fffff] ") + text);
+                Trace.WriteLine(text);
             }
         }
-
-        /// <summary>
-        /// Method to override.
-        /// </summary>
-        /// <param name="text">Text to write.</param>
-        protected abstract void Write(string text);
-
-        /// <summary>
-        /// Dispose method.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-
-        /// <summary>
-        /// Method to allow implementers to override.
-        /// </summary>
-        /// <param name="disposing"></param>
-        protected virtual void Dispose(bool disposing)
-        {
-            if(disposing) GC.SuppressFinalize(this);
-        }
+        
     }
 }

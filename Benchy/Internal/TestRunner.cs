@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Benchy.Framework;
 
 namespace Benchy.Internal
@@ -19,10 +20,12 @@ namespace Benchy.Internal
         /// <summary>
         /// Main method that executes the tests.
         /// </summary>
-        /// <param name="tests"></param>
-        /// <returns></returns>
+        /// <param name="testFixtures">Fixtures to execute.</param>
+        /// <returns>The results of those tests.</returns>
         public IExecutionResults[] ExecuteTests(IEnumerable<IFixture> testFixtures)
         {
+            if (testFixtures == null) throw new ArgumentNullException("testFixtures");
+
             _logger.WriteEntry(String.Format("Test runner starting. {0}", DateTime.Now), LogLevel.Setup);
 
             var list = new List<IExecutionResults>();
@@ -47,10 +50,12 @@ namespace Benchy.Internal
             return list.ToArray();
         }
 
+
         private IEnumerable<IExecutionResults> PerformTests(IEnumerable<IBenchmarkTest> tests)
         {
             foreach (var test in tests.Select(t => new HostedBenchmarkTest(t, _logger)))
             {
+                var localTest = test;
                 var result = new ExecutionResults { 
                     Name = test.Name, 
                     TypeName = test.TypeName, 
@@ -65,58 +70,44 @@ namespace Benchy.Internal
                     
                     test.Setup();
 
-                    for (var i = 0; i <= test.ExecutionCount; i++)
-                    {
-                        var testPassName = i == 0
-                                                ? string.Format("{0} Initialization", test.Name)
-                                                : string.Format("{1} Execution, Pass #{0}", i, test.Name);
 
-                        _logger.WriteEntry(testPassName + " Start", LogLevel.Execution);
-
-                        if (test.CollectGarbage)
-                        {
-                            GC.Collect();
-                            GC.WaitForPendingFinalizers();
-                            GC.Collect();
-                        }
-                        test.PerPassSetup();
-
-                        test.Execute();
-
-                        test.PerPassTeardown();
-
-                        var testPass = new TestPass { 
-                            TestName = testPassName, 
-                            ExceptionOccurred = test.ThrewException, 
-                            ExceptionTypeName = test.ExceptionName, 
-                            ExecutionTime = test.ExecutionTime,
-                            Status = test.GetResult()
-                        };
-
-                        _logger.WriteEntry(testPass.TestName + " " + testPass.Status, LogLevel.Execution);
-
-                        if (!test.ThrewException && i <= 0) continue;
-                        
-                        resultStatus = (ResultStatus)
-                                       Math.Max(
-                                           (int)test.GetResult(),
-                                           (int)resultStatus
-                                           );
-
-                        result.AddTestPass(testPass);
-                    }
+                    var executionCount = test.ExecutionCount + 1;
+                    var localResultStatus = resultStatus;
+                    var parallelOptions = new ParallelOptions();
                     
+                    if (!test.RunInParallel)
+                    {
+                        //ignore parallelism.
+                        parallelOptions.MaxDegreeOfParallelism = 1;
+                    }
+
+                    Parallel.For(0, executionCount, parallelOptions, indexer =>
+                        {
+                            var testPass = ExecuteTest(indexer, localTest);
+                            if (!localTest.ThrewException && indexer <= 0) return;
+
+                            localResultStatus = (ResultStatus)
+                                           Math.Max(
+                                               (int)localTest.GetResult(),
+                                               (int)localResultStatus
+                                               );
+
+                            result.AddTestPass(testPass);
+                        });
+
+                    resultStatus = localResultStatus;
+
                     _logger.WriteEntry(string.Format("{0}: Teardown", test.Name),
                         LogLevel.Teardown);
 
                     test.Teardown();
                 }
-                catch (SetupException setup)
+                catch (SetupException setupException)
                 {
-                    _logger.WriteEntry(string.Format("{0}: Setup Exception\r\n{1}", test.Name, setup),
+                    _logger.WriteEntry(string.Format("{0}: Setup Exception\r\n{1}", test.Name, setupException),
                         LogLevel.Exception | LogLevel.Setup);
 
-                    result.SetupException = setup;
+                    result.SetupException = setupException;
 
                     result.ResultText = "Test threw an exception during Setup.";
                     resultStatus = ResultStatus.Failed;
@@ -139,6 +130,42 @@ namespace Benchy.Internal
             }
         }
 
+        private TestPass ExecuteTest(long indexer, HostedBenchmarkTest test)
+        {
+            if (test.CollectGarbage)
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+            } 
+            
+            var testPassName = indexer == 0
+                                   ? string.Format("{0} Initialization", test.Name)
+                                   : string.Format("{1} Execution, Pass #{0}", indexer, test.Name);
+
+            _logger.WriteEntry(testPassName + " Start", LogLevel.Execution);
+
+            test.PerPassSetup();
+
+            test.Execute();
+
+            test.PerPassTeardown();
+
+            var testPass = new TestPass
+                {
+                    TestName = testPassName,
+                    ExceptionOccurred = test.ThrewException,
+                    ExceptionTypeName = test.ExceptionName,
+                    ExecutionTime = test.ExecutionTime,
+                    Status = test.GetResult()
+                };
+
+            _logger.WriteEntry(testPass.TestName + " " + testPass.Status, LogLevel.Execution);
+            
+            return testPass;
+        }
+
+
         private static void SetStatus(ExecutionResults result, ResultStatus resultStatus, TimeSpan warnTime, TimeSpan failTime)
         {
             var status = new Dictionary<ResultStatus, string>
@@ -156,7 +183,7 @@ namespace Benchy.Internal
                     },
                     {
                         ResultStatus.Failed,
-                        string.Format("FAILED: Maximum execution time was: {0}, past the failure time {1}", result.LongestTime, failTime)
+                        result.HasExceptions ? "FAILED: Threw exceptions during execution." : string.Format("FAILED: Maximum execution time was: {0}, past the failure time {1}", result.LongestTime, failTime)
                     }
                 };
 

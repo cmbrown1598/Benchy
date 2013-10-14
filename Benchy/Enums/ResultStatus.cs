@@ -10,18 +10,18 @@ namespace Benchy.Framework
         /// <summary>
         /// Status has yet to be determined.
         /// </summary>
-        Indeterminate = 0,
+        Indeterminate = -1,
         /// <summary>
         /// Test executed successfully.
         /// </summary>
-        Success = 1,
+        Success = 0,
         /// <summary>
         /// Test executed, but in a time longer than the warning time specified.
         /// </summary>
-        Warning = 2,
+        Warning = 10,
         /// <summary>
         /// The test failed, either by throwing an unhandled exception, or by being over the failure time specified.
         /// </summary>
-        Failed = 3
+        Failed = 20
     }
 }

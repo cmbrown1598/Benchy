@@ -35,6 +35,12 @@ namespace Benchy.Framework
         }
 
         /// <summary>
+        /// Run the tests in this set in parallel.
+        /// </summary>
+        public bool Parallelize { get; set; }
+
+
+        /// <summary>
         /// Number of times the test should execute.
         /// </summary>
         public uint ExecutionCount

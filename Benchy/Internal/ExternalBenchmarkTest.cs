@@ -10,6 +10,7 @@ namespace Benchy.Framework
         public Action TeardownAction { get; set; }
         public Action PerPassTeardownAction { get; set; }
 
+        public bool RunInParallel { get; set; }
         public bool CollectGarbage { get; set; }
         public uint ExecutionCount { get; set; }
         public string Name { get; set; }

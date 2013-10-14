@@ -13,6 +13,7 @@ namespace Benchy.Framework
         string TypeName { get; }
         string Category { get; }
         bool CollectGarbage { get; }
+        bool RunInParallel { get; }
 
         bool HasSetup(ExecutionScope scope);
         bool HasTeardown(ExecutionScope scope);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Benchy.Framework;
 using CommandLine;
@@ -22,14 +23,12 @@ namespace Benchy.Runner
                     return null;
                 }
 
-                var logger = string.IsNullOrWhiteSpace(options.LogFileName)
-                                 ? new ConsoleLogger(options.LogLevel)
-                                 : (ILogger) new FileLogger(options.LogFileName, options.LogLevel);
+                var logger = new Logger(options.LogLevel);
 
-                
                 var exOptions = new ExecutionOptions(
                     (from m in options.AssemblyFiles select m).ToArray(),
                     logger);
+
                 return exOptions;
             }
 
@@ -42,9 +41,6 @@ namespace Benchy.Runner
 
         [ValueList(typeof(List<string>), MaximumElements = -1)]
         public IList<string> AssemblyFiles { get; set; }
-
-        [Option('f', DefaultValue = null, HelpText = "File to log to. Logs are written to console if not specified.")]
-        public string LogFileName { get; set; }
 
         [Option('l', DefaultValue = LogLevel.Full, HelpText = "Logging message level.")]
         public LogLevel LogLevel { get; set; }
