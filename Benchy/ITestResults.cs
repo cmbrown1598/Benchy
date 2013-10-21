@@ -81,12 +81,12 @@ namespace Benchy.Framework
         /// <summary>
         /// Method which breaks out the timespan data.
         /// </summary>
-        /// <returns>An array of <see cref="Benchy.IDataBreakout"/> instances.</returns>
+        /// <returns>An array of <see cref="IDataBreakout"/> instances.</returns>
         IDataBreakout[] GetBreakout();
         /// <summary>
         /// Method which returns Execution information.
         /// </summary>
-        /// <returns>An array of <see cref="Benchy.IExecutionExceptionInformation"/> instances.</returns>
+        /// <returns>An array of <see cref="IExecutionExceptionInformation"/> instances.</returns>
         IEnumerable<IExecutionExceptionInformation> GetExecutionExceptions();
     }
 }

@@ -19,9 +19,9 @@ namespace Benchy.Framework
 
 
         /// <summary>
-        /// The scope of the setup method.  Defaults to ExecutionScope.Fixture
+        /// The scope of the setup method.  Defaults to ExecutionScope.OnePerMethod
         /// 
-        /// If set to ExecutionScope.Method, will execute after each Benchmark method test pass completes.
+        /// If set to ExecutionScope.OnePerMethod, will execute after each Benchmark method test pass completes.
         /// If set to ExecutionScope.Fixture, will execute after all Benchmark methods test pass completes.
         /// </summary>
         public ExecutionScope ExecutionScope

@@ -25,7 +25,7 @@ namespace Benchy.Framework
         /// <summary>
         /// The type name of the exception that occurred during execution of the test.
         /// </summary>
-        string ExceptionTypeName { get; }
+        Type ExceptionType { get; }
 
         /// <summary>
         /// The time the individual test ran in.

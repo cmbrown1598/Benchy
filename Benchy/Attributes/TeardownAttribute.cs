@@ -18,7 +18,7 @@ namespace Benchy.Framework
         public object[] Parameters { get; set; }
 
         /// <summary>
-        /// The scope of the teardown method.  Defaults to ExecutionScope.Fixture
+        /// The scope of the teardown method.  Defaults to ExecutionScope.OncePerMethod
         /// 
         /// If set to ExecutionScope.Method, will execute after each Benchmark method test pass completes.
         /// If set to ExecutionScope.Fixture, will execute after all Benchmark methods test pass completes.

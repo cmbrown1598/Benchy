@@ -155,7 +155,7 @@ namespace Benchy.Internal
                 {
                     TestName = testPassName,
                     ExceptionOccurred = test.ThrewException,
-                    ExceptionTypeName = test.ExceptionName,
+                    ExceptionType = test.ExceptionType,
                     ExecutionTime = test.ExecutionTime,
                     Status = test.GetResult()
                 };

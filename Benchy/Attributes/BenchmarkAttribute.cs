@@ -61,29 +61,29 @@ namespace Benchy.Framework
         /// <summary>
         /// Length of time (in ticks) the test takes that flags the result as a warning.
         /// </summary>
-        public long WarningTimeInTicks { get; set; }
+        public uint WarningTimeInTicks { get; set; }
         /// <summary>
         /// Length of time (in seconds) the test takes that flags the result as a warning.
         /// </summary>
-        public long WarningTimeInSeconds { get; set; }
+        public uint WarningTimeInSeconds { get; set; }
         
         /// <summary>
         /// Length of time (in milliseconds) the test takes that flags the result as a warning.
         /// </summary>
-        public long WarningTimeInMilliseconds { get; set; }
+        public uint WarningTimeInMilliseconds { get; set; }
 
         /// <summary>
         /// Length of time (in ticks) the test takes that flags the result as a failure.
         /// </summary>
-        public long FailureTimeInTicks { get; set; }
+        public uint FailureTimeInTicks { get; set; }
         
         /// <summary>
         /// Length of time (in seconds) the test takes that flags the result as a failure.
         /// </summary>
-        public long FailureTimeInSeconds { get; set; }
+        public uint FailureTimeInSeconds { get; set; }
         /// <summary>
         /// Length of time (in milliseconds) the test takes that flags the result as a failure.
         /// </summary>
-        public long FailureTimeInMilliseconds { get; set; }
+        public uint FailureTimeInMilliseconds { get; set; }
     }
 }

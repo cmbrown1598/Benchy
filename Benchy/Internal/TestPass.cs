@@ -13,9 +13,9 @@ namespace Benchy.Framework
         /// </summary>
         public bool ExceptionOccurred { get; internal set; }
         /// <summary>
-        /// The type name of the exception that occurred during execution of the test.
+        /// The type name of the exception that occurred during execution of the test, if one was thrown.
         /// </summary>
-        public string ExceptionTypeName { get; internal set; }
+        public Type ExceptionType { get; internal set; }
         /// <summary>
         /// The time the individual test ran in.
         /// </summary>

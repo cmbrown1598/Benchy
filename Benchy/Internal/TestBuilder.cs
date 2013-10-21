@@ -148,7 +148,7 @@ namespace Benchy.Framework
             return null;
         }
         
-        public static TimeSpan? GetTimespan(long ticks, long milliseconds, long seconds)
+        public static TimeSpan? GetTimespan(uint ticks, uint milliseconds, uint seconds)
         {
             if (ticks > 0)
                 return TimeSpan.FromTicks(ticks);

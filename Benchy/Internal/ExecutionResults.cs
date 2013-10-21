@@ -99,8 +99,8 @@ namespace Benchy.Framework
 
         public IEnumerable<IExecutionExceptionInformation> GetExecutionExceptions()
         {
-            return _testPasses.GroupBy(m => m.ExceptionTypeName)
-                              .Select( n => new ExecutionExceptionInformation {ExceptionTypeName = n.Key, Occurances = n.Count()});
+            return _testPasses.GroupBy(m => m.ExceptionType)
+                              .Select( n => new ExecutionExceptionInformation {ExceptionTypeName = n.Key.Name, Occurances = n.Count()});
         }
     }
 }
