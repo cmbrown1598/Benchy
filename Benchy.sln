@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchy", "Benchy\Benchy.csproj", "{B461F014-B0DC-41BE-9979-472DCF7ADF2A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchy.Console", "Benchy.Runner\Benchy.Console.csproj", "{E81FEC21-0C84-4BB3-A944-FE605DBFE2A6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchy.Console", "Benchy.Console\Benchy.Console.csproj", "{E81FEC21-0C84-4BB3-A944-FE605DBFE2A6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{FD803ACE-FA33-4591-A65F-AB7095167823}"
 	ProjectSection(SolutionItems) = preProject
@@ -17,7 +17,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2588530F-2157-4713-B74B-0E2E5BC7123F}"
 	ProjectSection(SolutionItems) = preProject
 		Benchy.Framework.nuspec = Benchy.Framework.nuspec
-		Benchy.Runner.Console.nuspec = Benchy.Runner.Console.nuspec
+		Benchy.Console.nuspec = Benchy.Console.nuspec
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DCDD2B7D-472A-4CFA-BA81-10C126B8B4F0}"
