@@ -136,6 +136,7 @@ namespace Benchy.Framework
                 ThrewException = true;
                 ExceptionType = e.GetType();
                 _logger.WriteEntry("EXECUTION EXCEPTION", LogLevel.Execution | LogLevel.Exception);
+                _logger.WriteEntry(e.ToString(), LogLevel.Execution | LogLevel.Exception);
             }
             finally
             {

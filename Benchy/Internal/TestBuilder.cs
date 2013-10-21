@@ -105,7 +105,8 @@ namespace Benchy.Framework
             return list;
         }
 
-        private IEnumerable<MethodInfo> GetValidMethods<T>(Type type, params Type[] invalidAttributes) where T : Attribute, IBenchyAttribute
+        private IEnumerable<MethodInfo> GetValidMethods<T>(Type type, params Type[] invalidAttributes) 
+            where T : Attribute, IBenchyAttribute
         {
             var methods = type.GetMethods().Where(m => m.GetCustomAttributes<T>().Any());
 
@@ -127,7 +128,8 @@ namespace Benchy.Framework
             return true;
         }
 
-        private static Action CreateAction<T>(IEnumerable<MethodInfo> methods, object typeInstance, ExecutionScope scope) where T : Attribute, IBenchyAttribute, IScopedAttribute
+        private static Action CreateAction<T>(IEnumerable<MethodInfo> methods, object typeInstance, ExecutionScope scope) 
+            where T : Attribute, IBenchyAttribute, IScopedAttribute
         {
             var ms = methods.ToArray();
 
