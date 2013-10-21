@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Benchy.Runner")]
+[assembly: AssemblyTitle("Benchy.Console")]
 [assembly: AssemblyDescription("The Benchy Test Runner application.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Mojoshouse Software")]
-[assembly: AssemblyProduct("Benchy.Runner")]
-[assembly: AssemblyCopyright("Copyright (C) Mojoshouse 2013")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("")]
+[assembly: AssemblyCopyright("")]
 [assembly: AssemblyInformationalVersion("1.0")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

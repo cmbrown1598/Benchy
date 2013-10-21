@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchy", "Benchy\Benchy.csproj", "{B461F014-B0DC-41BE-9979-472DCF7ADF2A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchy.Runner", "Benchy.Runner\Benchy.Runner.csproj", "{E81FEC21-0C84-4BB3-A944-FE605DBFE2A6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchy.Console", "Benchy.Runner\Benchy.Console.csproj", "{E81FEC21-0C84-4BB3-A944-FE605DBFE2A6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{FD803ACE-FA33-4591-A65F-AB7095167823}"
 	ProjectSection(SolutionItems) = preProject
