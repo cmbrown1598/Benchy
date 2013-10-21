@@ -71,7 +71,6 @@
   <ItemGroup>
     <Compile Include="CommandLineOptions.cs" />
     <Compile Include="ExecutionOptions.cs" />
-    <Compile Include="Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

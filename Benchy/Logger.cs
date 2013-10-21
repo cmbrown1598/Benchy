@@ -1,11 +1,9 @@
-using System;
 using System.Diagnostics;
-using Benchy.Framework;
 
-namespace Benchy.Runner
+namespace Benchy.Framework
 {
     /// <summary>
-    /// An abstract logger implementation.
+    /// A default logger implementation.
     /// </summary>
     public sealed class Logger : ILogger
     {
