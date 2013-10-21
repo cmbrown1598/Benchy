@@ -57,6 +57,11 @@ namespace Benchy.Framework
         /// The Average Time taken of all test passes.
         /// </summary>
         TimeSpan MeanTime { get; }
+
+        /// <summary>
+        /// The Total Time taken by the test passes.
+        /// </summary>
+        TimeSpan TotalTime { get; }
         
         /// <summary>
         /// The baseline Test Pass data.

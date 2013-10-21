@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Benchy.Framework;
 
-namespace Benchy.Runner
+namespace Benchy.Framework
 {
     public sealed class ExecutionResultsFormatter : IExecutionResultsFormatter
     {

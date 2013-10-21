@@ -60,6 +60,7 @@
     <Compile Include="Attributes\IScopedAttribute.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Enums\ExecutionScope.cs" />
+    <Compile Include="ExecutionResultsFormatter.cs" />
     <Compile Include="IDataBreakout.cs" />
     <Compile Include="IExecutionExceptionInformation.cs" />
     <Compile Include="IExecutionOptions.cs" />

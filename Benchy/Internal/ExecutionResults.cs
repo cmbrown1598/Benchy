@@ -80,6 +80,14 @@ namespace Benchy.Framework
             get { return TestPassesCount > 0 ? TimeSpan.FromTicks((long)_testPasses.Average(m => m.ExecutionTime.Ticks)) : TimeSpan.MinValue; }
         }
 
+        public TimeSpan TotalTime
+        {
+            get
+            {
+                return TestPassesCount > 0 ? TimeSpan.FromTicks(_testPasses.Sum(m => m.ExecutionTime.Ticks)) : TimeSpan.MinValue; 
+            }
+        }
+
         public ITestPass[] Data
         {
             get { return _testPasses.ToArray(); }

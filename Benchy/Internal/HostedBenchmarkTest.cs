@@ -147,7 +147,6 @@ namespace Benchy.Framework
                 }
                 ExecutionTime = watch.Elapsed;
                 _logger.WriteEntry("EXECUTION COMPLETE", LogLevel.Execution);
-
             }
         }
     }
