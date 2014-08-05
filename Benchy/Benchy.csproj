@@ -84,7 +84,7 @@
     <Compile Include="Internal\ExecutionResults.cs" />
     <Compile Include="Internal\TestRunner.cs" />
     <Compile Include="ITestPass.cs" />
-    <Compile Include="ITestResults.cs" />
+    <Compile Include="IExecutionResults.cs" />
     <Compile Include="Enums\LogLevel.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
