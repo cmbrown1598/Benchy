@@ -4,7 +4,7 @@ using Benchy.Framework;
 
 namespace Sample.Benchy.Tests
 {
-    [BenchmarkFixture]
+    [BenchmarkFixture(Ignore = true)]
     class TeardownExamplesTest
     {
         [Teardown(ExecutionScope = ExecutionScope.OncePerFixture)]

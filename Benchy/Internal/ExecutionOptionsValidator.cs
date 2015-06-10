@@ -17,8 +17,10 @@ namespace Benchy.Framework
             if (options.ResultsFormatter == null)
                 throw new ApplicationException("Results formatter not specified.");
 
-            if(options.Files.Any(m => !File.Exists(m)))
-                throw new FileNotFoundException("Assembly file(s) not found.");
+            foreach (var file in options.Files.Where(file => !File.Exists(file)))
+            {
+                throw new FileNotFoundException(string.Format("Assembly file {0} not found.", file));
+            }
             return true;
         }
     }

@@ -2,11 +2,10 @@
 
 namespace Sample.Benchy.Tests
 {
-    [BenchmarkFixture(Category = "Superheros")]
+    [BenchmarkFixture(Category = "Superheros", Ignore = true)]
     public class CaptainPlanetBenchmarkTest
     {
-        [Benchmark(ExecutionCount = 20, WarningTimeInMilliseconds = 20, FailureTimeInMilliseconds = 30)]
-        [Benchmark(ExecutionCount = 20, WarningTimeInMilliseconds = 20, FailureTimeInMilliseconds = 30)]
+        [Benchmark(ExecutionCount = 100, WarningTimeInMilliseconds = 10, FailureTimeInMilliseconds = 20)]
         public void Execute()
         {
             const int maxValue = 2500000;

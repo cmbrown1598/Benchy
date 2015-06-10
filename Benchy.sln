@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+Microsoft Visual Studio Solution File, Format Version 13.00
+# Visual Studio 2013
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchy", "Benchy\Benchy.csproj", "{B461F014-B0DC-41BE-9979-472DCF7ADF2A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchy.Console", "Benchy.Console\Benchy.Console.csproj", "{E81FEC21-0C84-4BB3-A944-FE605DBFE2A6}"

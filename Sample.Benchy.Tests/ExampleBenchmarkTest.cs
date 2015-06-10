@@ -3,11 +3,11 @@ using Benchy.Framework;
 
 namespace Sample.Benchy.Tests
 {
-    [BenchmarkFixture]
+    [BenchmarkFixture(Ignore = false)]
     class ParallelizeBenchmarkTest
     {
         // This code will run in parallel.
-        [Benchmark(Parallelize = true, ExecutionCount = 100)]
+        [Benchmark(Parallelize = true, ExecutionCount = 10000)]
         public void Execute()
         {
             var ds = new DataSet("My Dataset");
